@@ -1,0 +1,403 @@
+:root{
+    --main-color: rgb(2, 77, 223);
+    --almost-black: rgb(18, 18, 18);
+    --box-shadow-color: rgba(0, 0, 0, 0.35);
+    --cream-white: rgb(246, 246, 246);
+    --very-light-grey: rgb(238, 238, 238);
+    --light-grey: rgb(191, 191, 191);
+    --overlay-color: rgba(2, 77, 223, 0.4);
+}
+
+a{
+    text-decoration: none;
+    color: var(--almost-black);
+}  
+
+body{
+    margin: 0;
+    font-family: "Montserrat", Arial, Helvetica, sans-serif;
+    position: relative;
+}
+
+
+#hero {
+    padding: 16px 16px 24px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    min-height: 310px;
+    overflow: hidden;
+    color: rgb(255, 255, 255);
+    text-shadow: rgba(0, 0, 0, 0.5) 0px 0px 10px;
+    background-color: rgb(18, 18, 18);
+}
+
+#heroblur {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    display: block;
+    background-image: url(https://prismic-images.tmol.io/ticketmaster-tm-global/Z7W3457c43Q3f9hm_BLACKPINK_2025_tmit.jpg?auto=format%2Ccompress&rect=387%2C0%2C1651%2C1365&w=375&h=310);
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    opacity: 0.4;
+}
+
+.des-box {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    z-index: 1;
+}
+
+#link-path {
+    margin: 0px;
+    padding: 0px;
+    list-style: none;
+    font-size: 14px;
+    line-height: 18px;
+    letter-spacing: 0.02em;
+    font-weight: 400;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    color: rgb(255, 255, 255);
+}
+
+#link-path a{
+    color:white;
+    text-decoration: none;
+}
+
+#link-path a:hover{
+    text-decoration: underline;
+}
+
+#hero-des {
+    display: flex;
+    flex-direction: column;
+    margin-top: 24px;
+}
+
+#hero-des h1{
+    font-size: 44px;
+    font-weight: 800;
+    margin: 0;
+}
+
+#hero-des p{
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.width-limiter{
+    width: 100%;
+    max-width: 1248px;
+}
+
+#event-nav{
+    padding-right: 16px;
+    padding-left: 16px;
+    position: sticky;
+    top: 0px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    background-color: rgb(255, 255, 255);
+    box-shadow: rgba(18, 18, 18, 0.18) 0px 3px 12px 0px;
+}
+
+.event-nav-hover:hover{
+    background-color: rgb(235, 235, 235);
+    text-decoration: underline;
+    cursor: pointer;
+    color:rgb(18, 18, 18);
+}
+
+.event-nav-hover{
+    color:rgb(100, 100, 100);
+    text-transform: uppercase;
+    padding: 0 20px;;
+}
+
+#navigation-event div{
+    padding: 0px 20px;
+}
+
+#navigation-event{
+    height: 100%;
+    width: 50%;
+    display: flex;
+    align-items: center;
+}
+
+.event-nav-active{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border-bottom: 4px solid black;
+    color: rgb(18, 18, 18);
+    height: calc(100% - 4px);
+}
+
+#event-container{
+    padding: 40px 24px 64px 24px;
+    display: flex;
+    justify-content: center;
+    background-color: var(--cream-white);
+}
+
+#event-box{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-top: 40px;
+    width: 67%;
+    border-radius: 4px;
+    box-shadow: rgba(18, 18, 18, 0.18) 0px 3px 12px 0px;
+}
+
+.event-count{
+    background-color: #f6f6f6;
+    padding: 12px 16px;
+    display: flex;
+    min-height: 38px;
+    align-items: center;
+    border-radius: 4px 4px 0px 0px;
+}
+
+.event-count h2{
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0px;
+}
+
+.event-country{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 16px 16px 0;
+    background-color: white;
+}
+
+.event-country strong{
+    font-size: 16px;
+    font-weight: 800;
+    margin: 0px;
+}
+
+.event-country p{
+    font-size: 14px;
+    margin: 5px 0 0 0;
+    font-weight: 600;
+    color: rgb(100, 100, 100);
+    text-transform: uppercase;
+}
+
+.event-country{
+    background-color: white;
+}
+
+.section-title h2{
+    font-weight: 700;
+    font-size: 22px;
+    line-height: 24px;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    margin: 0px;
+}
+
+.section-title p{
+    border-top: 5px solid black;
+    width: 32px;
+    margin-bottom: 8px;
+}
+
+.event-entry{
+    padding: 0 16px;
+    background-color: white;
+    border-radius: inherit;
+}
+
+.event-info{
+    padding: 16px 0;
+    border-bottom: 1px solid rgb(191, 191, 191);
+    display: flex;
+    justify-content: space-between;
+}
+
+.event-date{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    margin: 0 24px 0 16px;
+}
+
+.event-date p{
+    font-size: 18px;
+    margin: 0;
+    text-transform: uppercase;
+}
+
+.event-date strong{
+    font-size: 22px;
+    margin: 0;
+    font-weight: 600;
+}
+
+.event-desc{
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.event-desc p{
+    margin: 0;
+    color: rgb(100, 100, 100);
+}
+
+.event-buy{
+    display: flex;
+    align-items: center;
+    padding: 8px 16px;
+    height: 24px;
+    align-self: center;
+    border-radius: 4px;
+    background-color: rgb(2, 77, 223);;
+}
+
+.event-buy:hover{
+    background-color: rgb(1, 57, 167);
+}
+
+.event-buy img{
+    height: 24px;
+    width: 24px;
+}
+
+.event-buy p{
+    margin-right: 10px;
+    color: white;
+    font-weight: 600;
+}
+
+.event-split{
+    margin-top: 12px;
+}
+
+#info-container{
+    position: relative;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+#info-box{
+    width: 50%;
+    background-color: white;
+    padding: 64px 0;
+    min-height: 500px;
+    border-top: 1px solid rgb(191, 191, 191);
+}
+
+.white-filler{
+    background-color: white;
+    border-top: 1px solid rgb(191, 191, 191);
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    left: 0px;
+    z-index: -1;
+}
+
+.back-image{
+    position: absolute;
+    z-index: -2;
+    height: 100%;
+    top: 0px;
+    right: 0px;
+}
+
+@media (min-width: 720px) {
+    #hero {
+        min-height: 360px;
+        padding-top: 24px;
+        padding-bottom: 48px;
+    }
+
+    #heroblur {
+        background-image: url(https://prismic-images.tmol.io/ticketmaster-tm-global/Z7W3457c43Q3f9hm_BLACKPINK_2025_tmit.jpg?auto=format%2Ccompress&rect=0%2C0%2C2426%2C1023&w=1024&h=432);
+    }
+}
+
+
+@media (min-width: 900px) {
+    #hero {
+        padding-right: 40px;
+        padding-left: 40px;
+    }
+
+    .info-box {
+        padding: 80px 0px;
+    }
+
+    #event-nav {
+        padding-right: 40px;
+        padding-left: 40px;
+    }
+}
+
+@media (min-width: 1300px) {
+    #event-container{
+        padding: 40px 40px 80px 40px;
+    }
+}
+
+@media (max-width: 1050px) {
+    .event-buy p{
+        display: none;
+    }
+
+    .event-buy{
+        border-radius: 50%;
+        padding: 8px;
+    }
+}
+
+@media (max-width: 900px) {
+    #hero-des h1{
+        font-size: 32px;
+    }
+
+    #event-box{
+        margin: 24px -24px 0 -24px;
+        width: auto;
+    }
+}
+
+@media (min-width: 1450px) {
+
+    #event-container{
+        padding: 40px 96px 80px 96px;
+    }
+}
+
+@media (min-width: 375px) {
+    #hero {
+        padding-right: 24px;
+        padding-left: 24px;
+    }
+
+    #event-nav {
+        padding-right: 24px;
+        padding-left: 24px;
+    }
+}

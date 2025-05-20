@@ -1,0 +1,287 @@
+footer{
+    background-color: rgb(18, 18, 18);
+    width: 100%;
+    height: auto;
+    color: white;
+}
+
+footer a{
+    color: white;
+}
+
+#footer{
+    display: flex;
+    justify-content: space-between;
+    padding: 64px 40px;
+}
+
+#promo{
+    width: 40%;
+    height: 100%;
+    padding-right: 80px;
+}
+
+#promo img{
+    padding: 0;
+    margin-bottom: 32px;
+}
+
+#collegamenti{
+    width: 50%;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.elenco{
+    display: flex;
+    width: 25%;
+    flex-direction: column;
+    padding: 0 28px 0 0;
+}
+
+.elenco h3{
+    font-size: 1em;
+    margin: 0;
+}
+
+.lista{
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    padding: 10px 0;
+}
+
+.lista a{
+    padding: 15px 0;
+}
+
+.lista a:hover{
+    text-decoration: underline;
+}
+
+#social{
+    display: flex;
+    flex-direction: row;
+    margin-left: -10px;
+}
+
+.app-icon{
+    padding: 10px;
+    width: 24px;
+    height: 24px;
+}
+
+.app-icon:hover{
+    cursor: pointer;
+    background-color: rgb(30, 30, 30);
+}
+
+#disclaimer{
+    margin-top: 32px;
+}
+
+#legal{
+    display: flex;
+    justify-content: space-between;
+    padding: 0 40px 40px;
+}
+
+#divider{
+    padding: 0 40px;
+}
+
+#divider div{
+    border-top: 1px solid rgb(191, 191, 191);
+    border-radius: 4px;
+}
+
+#copyright{
+    width: 50%;
+    display: flex;
+    justify-content: end;
+    align-items: end;
+}
+
+#privacy{
+    width: 50%;
+    display: flex;
+    justify-content: start;
+    align-items: end;
+    margin-left: -8px;
+}
+
+#copyright p{
+    padding-top: 32px;
+    font-size: 14px;
+}
+
+#privacy a{
+    padding: 2.8px 8px;
+    font-size: 14px;
+}
+
+#privacy a:hover{
+    color: white;
+    text-decoration: underline;
+}
+
+.middle{
+    border-left: 1px solid rgb(191, 191, 191);
+    border-right: 1px solid rgb(191, 191, 191);
+}
+
+#menu{
+    display: none;
+}
+
+.div-mobile{
+    display: none;
+}
+
+#left-navbar{
+    display: flex;
+    height: 100%;
+    align-items: center;
+}
+
+#footer-arrow{
+    display: none;
+}
+
+#scroll-arrow{
+    display: none;
+    z-index: 1;
+    position: absolute;
+    width: 44px;
+    height: 44px;
+    background-color: rgb(2, 77, 223);
+    border-radius: 4px;
+    right: 0%;
+    top: 50%;
+
+    background-image: url("../icons/rscroll.png");
+    background-size: 60%;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+#scroll-arrow:hover{
+    cursor: pointer;
+    background-color: rgb(1, 57, 167);
+}
+
+.lista-mobile{
+    display: none;
+}
+
+.lista-mobile a {
+    padding: 10px 0;
+}
+
+.lista-mobile a:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 1100px) {
+
+    #collegamenti{
+        flex-wrap: wrap;
+    }
+
+    .elenco{
+        width: 45%;
+        padding: 0 10px;
+    }
+}
+
+@media (max-width: 720px) {
+    #legal{
+        flex-direction: column;
+        padding: 40px 16px 40px 16px;
+        align-items: center;
+    }
+
+    #copyright{
+        width: 100%;
+        justify-content: center;
+    }
+
+    #privacy{
+        width: 100%;
+        justify-content: center;
+        padding-top: 40px;
+    }
+
+    #footer{
+        flex-direction: column;
+        padding: 64px 16px 0px 16px;
+    }
+
+    #promo{
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        padding: 0;
+    }
+
+    #promo .logo{
+        height: 24px;
+    }
+
+    #copyright p {
+        padding-top: 0;
+    }
+
+    .lista{
+        display: none;
+    }
+
+    .elenco{
+        width: 100%;
+        justify-content: space-between;
+        padding: 20px 8px;
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .elenco:hover{
+        background-color: rgb(15, 15, 15);
+        border-radius: 4px;
+    }
+
+    .lista-mobile{
+        display: flex;
+        flex-direction: column;
+        align-self: start;
+        margin-bottom: 10px;
+    }
+
+    #collegamenti{
+        width: 100%;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: nowrap;
+        flex-direction: column;
+    }
+
+    #footer-arrow{
+        display: block;
+        height: 27px;
+        width: 27px;
+    }
+
+    .div-mobile{
+        display: block;
+    }
+
+    .div-desktop{
+        display: none;
+    }
+
+    #divider{
+        padding: 0 16px;
+        width: 100%;
+    }
+}

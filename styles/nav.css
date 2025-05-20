@@ -1,0 +1,453 @@
+nav{
+    background-color: rgb(2, 77, 223);
+    height: 95px;
+    padding-left: 40px;
+    padding-right: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    font-weight: bold;
+    color: white;
+}
+
+#mobile-menu{
+    display: none;
+}
+
+.logo img{
+    width: 180px;
+    height: 32px;
+}
+
+.logo{
+    display: flex;
+    width: fit-content;
+    height: 100%;
+    margin-right: 18px;
+    align-items: center;
+}
+
+nav a:hover,
+nav a{
+    color: white;
+    padding: 8px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+nav p{
+    color: white;
+    padding-left: 8px;
+    font-weight: bold;
+    text-decoration: none;
+    margin: 0;
+}
+
+#functions #login,
+#info div,
+.nav-button{
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+#functions #login{
+    padding: 0 10px;
+}
+
+.searchbar{
+    width: 360px;
+    height: 47px;
+    display: flex;
+    flex-shrink: 1;
+    font-weight: bolder;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1px 1px 1px 1px;
+    margin-right: 20px;
+    border: 1px solid rgb(246, 246, 246);
+    border-radius: 4px;
+    background-color: rgb(33, 99, 227);
+}
+
+#mobilebar{
+    display: none;
+}
+
+input::placeholder{
+    color: white;
+}
+
+.searchbar input{
+    width: 100%;
+    height: 100%;
+    border: none;
+    padding-left: 10px;
+    margin-right: 10px;
+    background-color: transparent;
+    color: black;
+}
+
+#sbutton{
+    height: 46px;
+    width: 51px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#sbutton:hover{
+    background-color: rgb(2, 65, 187);
+    border-radius: 4px;
+}
+
+.searchbar img#search {
+    width: 22px;
+    height: 22px;
+}
+
+#functions #login:hover,
+.nav-b-hover:hover{
+    background-color: rgb(2, 65, 187);
+    cursor: pointer;
+}
+
+#navigation{
+    height: 100%;
+    width: 50%;
+    display: flex;
+    align-items: center;
+}
+
+#navigation div{
+    padding: 0 8px;
+}
+
+#functions{
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    height: 100%;
+}
+
+#person{
+    width: 24px;
+    height: 24px;
+}
+
+#Altro{
+    display: none;
+}
+
+.nav-b-inactive{
+    cursor: default;
+}
+
+.nav-b-active{
+    background-color: rgb(2, 65, 187);
+}
+
+#modal-nav-desktop{
+    position: absolute;
+    top: 100%;
+    right: 0;
+    left: 0;
+    height: auto;
+    background-color: var(--almost-black);
+    z-index: 2;
+}
+
+.nav-box{
+    display: flex;
+    justify-content: space-between;
+    padding: 32px 40px;
+}
+
+.nav-title{
+    font-weight: 700;
+    font-size: 32px;
+    line-height: 0.88;
+    letter-spacing: -2px;
+    text-transform: uppercase;
+    margin: 0px;
+}
+
+.nav-list{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 17%;
+    justify-content: space-between;
+    margin: -10px 0;
+}
+
+.nav-list a{
+    padding: 10px 0;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.nav-list a:hover{
+    padding: 10px 0;
+    font-size: 15px;
+    font-weight: 500;
+    text-decoration: underline;
+    color: rgb(191, 191, 191);
+}
+
+a.all-category{
+    color: rgb(48, 116, 254);
+}
+
+a.all-category:hover{
+    color: rgb(48, 116, 254);
+    text-decoration: underline;
+}
+
+.other-navigation{
+    display: flex;
+    justify-content: space-between;
+}
+
+.other-buttons{
+    color: rgb(214, 214, 214);
+    text-decoration: none;
+}
+
+.other-buttons:hover{
+    color: rgb(214, 214, 214);
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.nav-wrap-title{
+    padding: 32px 40px 0;
+    text-transform: uppercase;
+    margin: 0;
+    font-size: 24px;
+}
+
+.nav-wrap-size{
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+}
+
+.nav-sidebar-style{
+    display: flex;
+    background-color: rgb(27, 27, 27);
+    width: 20%;
+    min-height: 300px;
+    flex-direction: column;
+    padding: 32px 24px;
+}
+
+.other-active{
+    text-decoration: underline;
+    color: white;
+
+}
+
+.other-active:hover{
+    text-decoration: underline;
+    color: white;
+
+}
+
+.mobile-menu-style{
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    width: 50vh;
+    background-color: rgb(18, 18, 18);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100vh;
+}
+
+.mobile-menu-style a{
+    color: white;
+}
+
+.menu-item:hover a{
+    color: lightgray;
+    text-decoration: underline;
+}
+
+.menu-item{
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 16px;
+}
+
+.menu-hoverable:hover{
+    background-color: rgb(77, 77, 77);
+}
+
+#dividermobile-top{
+    margin-bottom: 30px;
+    margin-top: 10px;
+}
+
+#paypalmobile{
+    margin-top: 30px;
+    width: 50%;
+}
+
+#close-button{
+    display: flex;
+    width: 42px;
+    height: 42px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+}
+
+#close-button:hover{
+    background-color: rgb(77, 77, 77);
+    cursor: pointer;
+}
+
+#menutop{
+    padding: 20px 5px 5px 5px;
+}
+
+#menubottom{
+    padding: 5px 5px 20px 5px;
+    display: flex;
+    flex-direction: column;
+}
+
+#dividermobile{
+    width: 98%;
+    align-self: center;
+    margin: 10px 0;
+}
+
+#dividermobile-top,
+#dividermobile div{
+    border-top: 1px solid rgb(65, 65, 65);
+    border-radius: 4px;
+}
+
+.hidden{
+    display: none;
+}
+
+.no-scroll{
+    overflow: hidden;
+}
+
+@media (max-width: 1400px) {
+    #Altro{
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    #Tempo{
+        display: none;
+    }
+}
+
+@media (max-width: 1300px) {
+
+    #Sport{
+        display: none;
+    }
+}
+
+@media (max-width: 1250px) {
+
+    #Arte{
+        display: none;
+    }
+}
+
+@media (max-width: 1100px) {
+
+    #Festival{
+        display: none;
+    }
+
+    #Musica{
+        display: none;
+    }
+    
+    .searchbar{
+            width: 320px;
+    }
+
+}
+
+@media (max-width: 900px) {
+
+    #Altro{
+        display: none;
+    }
+
+    nav{
+        height: 60px;
+        padding: 0 16px;
+    }
+
+    #mobile-menu{
+        display: block;
+        padding: 10px;
+    }
+
+    #mobile-menu:hover{
+        background-color: rgb(2, 65, 187);
+        display: block;
+    }
+
+    .searchbar{
+        padding: 0;
+    }
+
+    nav .logo{
+        height: 24px;
+    }
+
+    #login p{
+        display: none;
+    }
+
+    #modal-nav-desktop{
+        display: none;
+    }
+}
+
+@media (max-width: 720px) {
+
+    .mobile-menu-style{
+        width: 100%;
+    }
+
+    #webbar{
+        display: none;
+    }
+
+    #functions{
+        width: 100%;
+    }
+
+    #mobilebar{
+        display: flex;
+        width: 100%;
+    }
+
+    #barwrapper{
+        display: block;
+        padding: 16px;
+        background-color:rgb(2, 77, 223);
+    }
+}

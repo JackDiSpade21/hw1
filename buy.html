@@ -1,0 +1,317 @@
+<html>
+<head>
+    <title>Accedi | Ticketmaster</title>
+    <link rel="icon" type="image/x-icon" href="./favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="./styles/buy.css">
+    <script src="./scripts/footer.js" defer></script>
+    <link rel="stylesheet" type="text/css" href="./styles/nav.css">
+    <link rel="stylesheet" type="text/css" href="./styles/header.css">
+    <link rel="stylesheet" type="text/css" href="./styles/footer.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header>
+        <div id="languages">
+            <img id="flag"src="./icons/italy.png"></img>
+            <a href="#">IT</a>
+            <img src="./icons/lang.png"></img>
+            <a href="#">IT</a>
+        </div>
+    </header>
+    <nav class="nav-auth">
+        <div id="left-navbar">
+            <a href="./index.html" class="logo">
+                <img src="./icons/logo.png">
+            </a>
+        </div>
+    </nav>
+
+    <section id="main">
+    <div class="width-limiter">
+        <form>
+            <div id="concert-recap">
+                <img src="./cards/BLACKPINK_Medium.webp">
+                <div>
+                    <h3 class="margin-bottom event-title">BLACKPINK WORLD TOUR IN MILAN</h3>
+                    <label class="margin-bottom">mer 06 ago 2025 - h 20:00 | Ippodromo SNAI La Maura, Milano</label>
+                </div>
+            </div>
+            
+            <div id="step1" class="input-container">
+
+                <div id="ticketdisclaimer">Si esercita un limite di 5 biglietti per singolo ordine. Biglietti rimasti: 130.</div>
+                <b class="section-title">tipologia di biglietto</b>
+                
+                <div class="divider-buy"></div>
+                <div class="input-grouped input-go-column">
+                    <h3 class="ticket-type">Biglietto VIP / Poltrone migliori.</h3>
+                    <div class="quantity-field">
+                        <input type="number" id="quantity" name="quantity" min="0" max="5" value="0">
+                        <p class="tick-quantity" for="quantity">205.00 €</p>
+                    </div>
+                </div>                 
+                
+                <div class="divider-buy"></div>
+                <div class="input-grouped input-go-column">
+                    <h3 class="ticket-type">Biglietto Regular / Poltrone normali.</h3>
+                    <div class="quantity-field">
+                        <p class="oos">esaurito</p>
+                        <p class="tick-quantity" for="quantity">135.00 €</p>
+                    </div>
+                </div>  
+
+                <div class="divider-buy"></div>
+                <div class="input-grouped input-go-column">
+                    <h3 class="ticket-type">Biglietto Economy / Visibilità limitata.</h3>
+                    <div class="quantity-field">
+                        <input type="number" id="quantity" name="quantity" min="0" max="5" value="0">
+                        <p class="tick-quantity" for="quantity">55.00 €</p>
+                    </div>
+                </div>  
+                <div class="divider-buy"></div>
+
+                <b class="section-title">Modalità di consegna</b>
+                <div class="divider-buy"></div>
+
+                <div class="margin-bottom-double">
+                    
+                    <label>
+                        <input required="required" type="radio" name="print" value="paper"/>
+                        <div class="ticket-mode">
+                            <p>Spedizione tramite corriere.</p>
+                            <p class="print-price">10.00 €</p>
+                        </div>
+                    </label>
+
+                    <div class="divider-buy"></div>
+                    
+                    <label>
+                        <input required="required" type="radio" name="print" value="mail" checked/>
+                        <div class="ticket-mode">
+                            <p>Stampa a casa, ricevi via mail.</p>
+                            <p class="print-price">Gratis</p>
+                        </div>
+                    </label>
+
+                    <div class="divider-buy"></div>
+                </div>
+
+                <div class="submit-wrapper">
+                    <p class="error">Seleziona almeno un biglietto.</p>
+                    <input class="button-proceed margin-bottom-double" value="Prossimo passaggio" name="submit_btn" type="submit">
+                </div>
+            </div>
+
+            <div id="step2" class="input-container">
+
+                <b class="section-title">Dati di fatturazione</b>
+                
+                <div class="divider-buy margin-bottom-double"></div>
+                <div class="input-grouped margin-bottom">
+                    <div class="input-field">
+                        <label>Nome *</label>
+                        <input name="email" required="required" value="" type="email">
+                    </div>
+                    <div class="input-field">
+                        <label>Cognome *</label>
+                        <input name="confirm-email" required="required" value="" type="email">
+                    </div>
+                </div>
+
+                <div class="input-grouped margin-bottom">
+                    <div class="input-field">
+                        <label>Indirizzo completo *</label>
+                        <input name="email" required="required" value="" type="email">
+                    </div>
+                    <div class="input-field">
+                        <label>CAP *</label>
+                        <input name="confirm-email" required="required" value="" type="email">
+                    </div>
+                </div>
+
+                <div class="input-grouped margin-bottom">
+                    <div class="input-field">
+                        <label>Provincia *</label>
+                        <input name="email" required="required" value="" type="email">
+                    </div>
+                </div>
+
+                <b class="section-title">Dati di pagamento</b>
+                <div class="divider-buy margin-bottom-double"></div>
+                <div class="input-grouped margin-bottom">
+                    <div class="input-field">
+                        <label>Numero di carta *</label>
+                        <input name="email" required="required" value="" type="email">
+                    </div>
+                    <div class="input-field">
+                        <label>CVC *</label>
+                        <input name="confirm-email" required="required" value="" type="email">
+                    </div>
+                </div>
+
+                <div class="input-grouped">
+                    <div class="input-field">
+                        <label>Data di scadenza *</label>
+                        <input name="email" required="required" value="" type="email">
+                    </div>
+                </div>
+
+                <b class="section-title">Totale</b>
+                <div class="divider-buy margin-bottom"></div>
+                <h2 class="margin-bottom">450.00 €</h2>
+                <label>Sono incluse le tasse. Verrà inviata una ricevuta via mail.</label>
+                <label class="margin-bottom-double">I biglietti saranno visibili sul tuo profilo.</label>
+
+                <div class="submit-wrapper">
+                    <p class="error">Ricontrolla i dati inseriti.</p>
+                    <input class="button-proceed margin-bottom-double" value="Completa acquisto" name="submit_btn" type="submit">
+                </div>
+            </div>
+
+        </form>
+    </div>
+        
+    </section>
+
+    <footer>
+        <div id="footer">
+            <div id="promo">
+                <a href="/index.html" class="logo">
+                    <img src="./icons/logo.png">
+                </a>
+                <p>Seguiteci</p>
+                <div id="social">
+                    <div class="app-icon"><img src="./social/facebook.png"></img></div>
+                    <div class="app-icon"><img src="./social/instagram.png"></img></div>
+                    <div class="app-icon"><img src="./social/blog.png"></img></div>
+                    <div class="app-icon"><img src="./social/youtube.png"></img></div>
+                    <div class="app-icon"><img src="./social/spotify.png"></img></div>
+                    <div class="app-icon"><img src="./social/tiktok.png"></img></div>
+                    <div class="app-icon"><img src="./social/linkedin.png"></img></div>
+                </div>
+                <p id="disclaimer">Ticketmaster Italia srl - Milano, Via Pietrasanta 14 - Partita IVA 09584690961 - REA MI 2100017</p>
+            </div>
+            <div id="collegamenti">
+
+                <div id="divider" class="div-mobile"><div></div></div>
+
+                <div class="elenco" data-cat="assistenza">
+                <h3>Assistenza Clienti</h3>
+                <div class="lista">                   
+                    <a href="#">FAQ</a>
+                    <a href="#">Termini e condizioni di vendita</a>
+                    <a href="#">Termini e condizioni di utilizzo</a>
+                    <a href="#">Diritto di recesso</a>
+                    <a href="#">Eventi annullati o riprogrammati</a>
+                    <a href="#">Rivendita biglietti</a>
+                    <a href="#">Cambio Nominativo</a>
+                    <a href="#">Metodi di consegna</a>
+                    <a href="#">Metodi di pagamento</a>
+                </div>
+                <img id="footer-arrow" src="./icons/downarrow.png"></img>
+                </div>
+
+                <div class="mobilelist hidden" data-cat="assistenza">                   
+                    <a href="#">FAQ</a>
+                    <a href="#">Termini e condizioni di vendita</a>
+                    <a href="#">Termini e condizioni di utilizzo</a>
+                    <a href="#">Diritto di recesso</a>
+                    <a href="#">Eventi annullati o riprogrammati</a>
+                    <a href="#">Rivendita biglietti</a>
+                    <a href="#">Cambio Nominativo</a>
+                    <a href="#">Metodi di consegna</a>
+                    <a href="#">Metodi di pagamento</a>
+                </div>
+
+                <div id="divider" class="div-mobile"><div></div></div>
+
+                <div class="elenco" data-cat="guide">
+                <h3>Guide Ticketmaster</h3>
+                <div class="lista">               
+                    <a href="#">Indiemaster</a>
+                    <a href="#">Popmaster</a>
+                    <a href="#">Festival Finder</a>
+                    <a href="#">Guida eventi sportivi</a>
+                    <a href="#">Guida Teatro</a>
+                    <a href="#">Biglietti VIP</a>
+                </div>
+                <img id="footer-arrow" src="./icons/downarrow.png"></img>
+                </div>
+
+                <div class="mobilelist hidden" data-cat="guide">               
+                    <a href="#">Indiemaster</a>
+                    <a href="#">Popmaster</a>
+                    <a href="#">Festival Finder</a>
+                    <a href="#">Guida eventi sportivi</a>
+                    <a href="#">Guida Teatro</a>
+                    <a href="#">Biglietti VIP</a>
+                </div>
+
+                <div id="divider" class="div-mobile"><div></div></div>
+
+                <div class="elenco" data-cat="network">
+                <h3>Il nostro network</h3>
+                <div class="lista">     
+                    <a href="#">Ticketmaster nel mondo</a>
+                    <a href="#">Live Nation</a>
+                    <a href="#">PayPal</a>
+                    <a href="#">Lavora con noi</a>
+                </div>
+                <img id="footer-arrow" src="./icons/downarrow.png"></img>
+                </div>
+
+                <div class="mobilelist hidden" data-cat="network">     
+                    <a href="#">Ticketmaster nel mondo</a>
+                    <a href="#">Live Nation</a>
+                    <a href="#">PayPal</a>
+                    <a href="#">Lavora con noi</a>
+                </div>
+
+                <div id="divider" class="div-mobile"><div></div></div>
+
+                <div class="elenco" data-cat="b2b">
+                <h3>B2B</h3>
+                <div class="lista">
+                    <a href="#">Chi Siamo</a>
+                    <a href="#">Artist Services</a>
+                    <a href="#">Programma Affiliati</a>
+                    <a href="#">Vendi i tuoi eventi con noi</a>
+                </div>
+                <img id="footer-arrow" src="./icons/downarrow.png"></img>
+                </div>
+
+                <div class="mobilelist hidden" data-cat="b2b">
+                    <a href="#">Chi Siamo</a>
+                    <a href="#">Artist Services</a>
+                    <a href="#">Programma Affiliati</a>
+                    <a href="#">Vendi i tuoi eventi con noi</a>
+                </div>
+
+                <div id="divider" class="div-mobile"><div></div></div>
+
+            </div>
+
+            </div>
+        </div>
+
+        <div id="divider" class="div-desktop"><div></div></div>
+
+        <div id="legal">
+            <div id="divider" class="div-mobile"><div></div></div>
+            <div id="privacy">
+                <a href="#">Informativa Privacy</a>
+                <a class="middle" href="#">Cookies</a>
+                <a href="#">Gestione dei Cookies</a>
+            </div>
+            <div id="copyright">
+                <p>© 1999-2025 Ticketmaster. Tutti i diritti riservati.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>        

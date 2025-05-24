@@ -1,0 +1,373 @@
+:root{
+    --main-color: rgb(2, 77, 223);
+    --almost-black: rgb(18, 18, 18);
+    --box-shadow-color: rgba(0, 0, 0, 0.35);
+    --cream-white: rgb(246, 246, 246);
+    --very-light-grey: rgb(238, 238, 238);
+    --light-grey: rgb(191, 191, 191);
+    --overlay-color: rgba(2, 77, 223, 0.4);
+}
+
+a{
+    text-decoration: none;
+    color: var(--almost-black);
+}  
+
+body{
+    margin: 0;
+    font-family: "Montserrat", Arial, Helvetica, sans-serif;
+    position: relative;
+}
+
+form{
+    text-align: left;
+    margin-bottom: 30px;
+}
+
+#main{
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 5px;
+    display: flex;
+    justify-content: center;
+}
+
+.nav-auth{
+    height: 64px;
+    padding-left: 30px;
+}
+
+form div, form h1, form h2, form h3, form h4,
+form p, form input{
+    margin: 0px;
+    padding: 0px;
+    line-height: 1.25;
+}
+
+form h2{
+    line-height: 1.25;
+    font-weight: 600;
+}
+
+form p{
+    font-weight: 500;
+    font-size: 1.000em;
+}
+
+.p-subtitle{
+    font-weight: 450;
+    font-size: 0.875em;
+}
+
+form a{
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 1.25;
+    color: rgb(2, 108, 223);
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+}
+
+form h3{
+    color: var(--almost-black);
+    line-height: 1.25;
+    font-weight: 500;
+    font-size: 1.125em;
+}
+
+form h4{
+    /* color: rgb(1, 80, 167); */
+    color: var(--almost-black);
+    line-height: 1.25;
+    font-weight: 500;
+    font-size: 1.250em;
+}
+
+label {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.5;
+    text-transform: none;
+    color: rgba(38, 38, 38, 0.65);
+    display: flex;
+    align-items: center;
+}
+
+.input-field{
+    margin: 0 12px 8px 0;
+    width: calc(50% - 12px);
+    padding-bottom: 15px;
+}
+
+.ticket-type{
+    padding: 16px 0px;
+}
+
+.quantity-field{
+    display: flex;
+    justify-content: space-between;
+    width: 25%;
+}
+
+.tick-quantity{
+    margin-left: 16px;
+    padding: 16px 0;
+    width: 100%;
+    text-align: end;
+}
+
+.quantity-field input{
+    margin: 8px 0px;
+    padding: 8px 8px;
+}
+
+.ticket-mode{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 0px;
+    width: 100%;
+}
+
+.oos{
+    color: white;
+    background-color: rgb(143, 146, 150);
+    padding: 0 4px;
+    border-radius: 8px;
+    height: fit-content;
+    align-self: center;
+    font-size: 12px;
+    text-transform: uppercase;
+}
+
+.print-price{
+    color:black;
+}
+
+.number-prefix{
+    width: 90px;
+    float: left;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+input[type="text"], 
+input[type="password"],
+input[type="email"],
+input[type="date"],
+select {
+    height: 36px;
+    width: 100%;
+    padding-left: 10px;
+    padding-right: 10px;
+    background-color: rgb(255, 255, 255);
+    line-height: normal;
+    font-size: 14px;
+    color: rgb(38, 38, 38);
+    border-radius: 2px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgb(153, 153, 153);
+    outline: none;
+}
+
+input[type="text"]:hover,
+input[type="password"]:hover,
+input[type="email"]:hover,
+input[type="date"]:hover {
+    padding-left: 9px;
+    padding-right: 9px;
+    border-width: 2px;
+    border-style: solid;
+    border-color: rgb(2, 108, 223);
+}
+
+input[type="tel"]:hover,
+select:hover {
+    border-width: 2px;
+    border-style: solid;
+    border-color: rgb(2, 108, 223);
+}
+
+input[type="tel"]{
+    height: 36px;
+    width: calc(100% - 90px);
+    padding-left: 5px;
+    padding-right: 10px;
+    background-color: rgb(255, 255, 255);
+    line-height: normal;
+    font-size: 14px;
+    color: rgb(38, 38, 38);
+    border-radius: 2px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgb(153, 153, 153);
+    outline: none;
+}
+
+input[type="radio"],
+input[type="checkbox"]{
+    height: 23px;
+    width: 23px;
+    margin-right: 15px;
+    flex-shrink: 0;
+}
+
+.input-grouped{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.margin-bottom{
+    margin-bottom: 12px;
+}
+
+.margin-bottom-double{
+    margin-bottom: 24px;
+}
+
+.button-submit {
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 2.43;
+    min-width: 60px;
+    text-align: center;
+    cursor: pointer;
+    color: rgb(255, 255, 255);
+    background-color: rgb(2, 108, 223);
+    padding: 0px 12px;
+    border-radius: 2px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgba(0, 0, 0, 0);
+}
+
+.button-proceed {
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 2.43;
+    min-width: 60px;
+    text-align: center;
+    cursor: pointer;
+    color: rgb(255, 255, 255);
+    background-color: rgb(27, 171, 30);
+    padding: 0px 14px;
+    border-radius: 2px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgba(0, 0, 0, 0);
+}
+
+.button-proceed:hover{
+    background-color: rgb(35, 112, 43);
+}
+
+.submit-wrapper{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+.italic {
+    font-style: italic;
+}
+
+.recovery{
+    font-size: 14px;
+}
+
+#concert-recap{
+    display: flex;
+    padding: 8px 8px 8px 0px;
+    background-color: var(--cream-white);
+}
+
+#concert-recap img{
+    height: 115px;
+    width: 204px;
+    margin-right: 16px;
+}
+
+#ticketdisclaimer{
+    background-color: #262626;
+    color: white;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 4px 8px;
+}
+
+.section-title{
+    padding-top: 24px;
+    display: block;
+    text-transform: uppercase; 
+    padding-bottom: 8px;
+}
+
+.divider-buy{
+    border-top: 1px solid rgb(191, 191, 191);
+    border-radius: 4px;
+}
+
+#step2 .input-grouped{
+    width: 50%;
+}
+
+.error{
+    color: red;
+    margin-bottom: 10px;
+}
+
+.event-title{
+    font-weight: 700;
+    font-size: 1.25em;
+}
+
+.width-limiter{
+    width: 100%;
+    max-width: 1248px;
+}
+
+@media (min-width: 1440px) {
+    .event-title{
+        font-size: 1.5em;
+    }
+}
+
+@media (max-width: 900px) {
+    .nav-auth{
+        padding-left: 10px;
+    }
+}
+
+@media (max-width: 767px) {
+
+    #concert-recap{
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    #concert-recap img{
+        margin-bottom: 12px;
+    }
+
+    .quantity-field{
+        width: 100%;
+    }
+
+    .input-go-column{
+        flex-direction: column;
+        align-items: start;
+    }
+
+    #step2 .input-grouped{
+        width: 100%;
+    }
+}

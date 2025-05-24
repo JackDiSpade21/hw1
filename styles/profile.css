@@ -1,0 +1,110 @@
+.nav-auth{
+    height: 64px;
+    padding-left: 30px;
+}
+
+.border-invisible{
+    border: none;
+    margin-bottom: 20px;
+}
+
+.ticket{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #e0e0e0;
+    margin-bottom: 20px;
+}
+
+.ticket-info{
+    margin-right: 30px;
+    width: 20%;
+}
+
+.ticket-info p{
+    margin: 0;
+}
+
+.qr-code{
+    width: 150px;
+    height: 150px;
+    border-right: 1px solid #e0e0e0;
+}
+
+.valid{
+    color: green;
+}
+
+.used{
+    color: orange;
+}
+
+.expired{
+    color: red;
+}
+
+h2{
+    margin: 0 0 8px 0;
+    font-size: 20px;
+}
+
+p{
+    margin: 0;
+}
+
+.input-grouped{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.margin-bottom{
+    margin-bottom: 12px;
+}
+
+.margin-bottom-double{
+    margin-bottom: 24px;
+}
+
+#my-data{
+    width: 50%;
+}
+
+.input-field{
+    width: 40%;
+}
+
+.button-submit {
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 2.43;
+    min-width: 60px;
+    text-align: center;
+    cursor: pointer;
+    color: rgb(255, 255, 255);
+    background-color: red;
+    padding: 0px 12px;
+    border-radius: 2px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgba(0, 0, 0, 0);
+}
+
+.profilepic{
+    background-image: url("../cards/profilepic.jpg");
+}
+
+@media (max-width: 900px) {
+    #my-data{
+        width: 70%;
+    }
+}
+
+@media (max-width: 720px) {
+    #my-data{
+        width: 90%;
+    }
+}

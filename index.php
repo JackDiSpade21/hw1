@@ -108,11 +108,12 @@
             <div id="sbutton"><img id="search" src="./icons/search.png"></img></div>
         </div>
     </div>
+
     <section id="hero">
         <div id="heroblur"></div>   
         <div id="description">
-            <h3>Rkomi</h3>
-            <p>Dopo aver calcato il palco di Sanremo, Rkomi è pronto a tornare live nell'estate 2025!</p>
+            <h3></h3>
+            <p></p>
             <a>Biglietti</a>
         </div>       
     </section>

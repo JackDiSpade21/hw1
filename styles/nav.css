@@ -37,7 +37,7 @@ nav a{
 }
 
 nav p{
-    color: white;
+    /* color: white; */
     padding-left: 8px;
     font-weight: bold;
     text-decoration: none;
@@ -215,6 +215,7 @@ a.all-category:hover{
 .other-buttons{
     color: rgb(214, 214, 214);
     text-decoration: none;
+    padding: 10px 0;
 }
 
 .other-buttons:hover{
@@ -283,6 +284,7 @@ a.all-category:hover{
 .menu-item{
     display: flex;
     justify-content: space-between;
+    align-items: center;
     padding: 5px 16px;
 }
 

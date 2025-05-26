@@ -40,13 +40,8 @@ body{
     left: 0px;
     display: block;
     background-repeat: no-repeat;
-    background-position: center center;
     background-size: cover;
     opacity: 0.4;
-}
-
-.eventpic{
-    background-image: url(https://prismic-images.tmol.io/ticketmaster-tm-global/Z7W3457c43Q3f9hm_BLACKPINK_2025_tmit.jpg?auto=format%2Ccompress&rect=387%2C0%2C1651%2C1365&w=375&h=310);
 }
 
 .des-box {
@@ -432,10 +427,6 @@ ol{
         min-height: 360px;
         padding-top: 24px;
         padding-bottom: 48px;
-    }
-
-    .eventpic {
-        background-image: url(https://prismic-images.tmol.io/ticketmaster-tm-global/Z7W3457c43Q3f9hm_BLACKPINK_2025_tmit.jpg?auto=format%2Ccompress&rect=0%2C0%2C2426%2C1023&w=1024&h=432);
     }
 }
 

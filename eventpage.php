@@ -1,6 +1,42 @@
+<?php
+        if (!isset($_GET['id'])) {
+            header("Location: index.php");
+            exit;
+        }
+
+        $conn = mysqli_connect("localhost", "root", "", "ticketmaster") or die(mysqli_connect_error());
+        $query = "SELECT * FROM Artista WHERE ID = " .$_GET['id'] . " LIMIT 1";
+        $result = mysqli_query($conn, $query) or die(mysqli_error($conn));
+        $row = mysqli_fetch_assoc($result);
+        
+        $query2 = "SELECT scaletta.ID as ScalettaID, scaletta.Nome as ScalettaNome, concerto.Canzone 
+                    FROM artista
+                    JOIN scaletta ON artista.ID = scaletta.Artista
+                    RIGHT JOIN concerto ON concerto.Scaletta = scaletta.ID
+                    WHERE artista.ID =".$_GET['id'].";";
+
+        $result = mysqli_query($conn, $query2) or die(mysqli_error($conn));
+
+        $scalette = array();
+        while ($row2 = mysqli_fetch_assoc($result)) {
+            $sid = $row2['ScalettaID'];
+            if (!isset($scalette[$sid])) {
+                $scalette[$sid] = [
+                    'nome' => $row2['ScalettaNome'],
+                    'canzoni' => []
+                ];
+            }
+            $scalette[$sid]['canzoni'][] = $row2['Canzone'];
+        }
+
+        //print_r($scalette);
+
+        mysqli_free_result($result);
+        mysqli_close($conn);
+?>
 <html>
 <head>
-    <title>Ticketmaster | Biglietti Ufficiali per Concerti, Festival, Arte e Teatro</title>
+    <title>Ticketmaster | Biglietti per <?php echo $row['Nome']?></title>
     <link rel="icon" type="image/x-icon" href="./favicon.ico">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="UTF-8">
@@ -151,20 +187,24 @@
     </section>
 
     <section id="hero">
-        <div id="heroblur" class="eventpic"></div>   
+        <div id="heroblur" style="background-image: url('<?php echo $row['Img']; ?>');"></div>
         <div id="description" class="width-limiter des-box">
             <div id="link-path">
                 <a href="#">Pagina iniziale</a>
                 <span>&nbsp/&nbsp</span>
-                <a href="#">Musica</a>
+                <?php
+                    echo '<a href="#">' . $row['Categoria'] . '</a>';
+                ?>
                 <span>&nbsp/&nbsp</span>
-                <a href="#">Rock</a>
+                <?php
+                    echo '<a href="#">' . $row['Genere'] . '</a>';
+                ?>
                 <span>&nbsp/&nbsp</span>
-                <span>Rkomi Biglietti</span>
+                <span><?php echo $row['Nome']?> Biglietti</span>
             </div>
             <div id="hero-des">
-                <p>Rock/Pop</p>
-                <h1>Biglietti per RKhomi</h1>
+                <p><?php echo $row['Genere']?></p>
+                <h1>Biglietti per <?php echo $row['Nome']?></h1>
             </div>
         </div>       
     </section>
@@ -263,14 +303,14 @@
                         <h2>Informazioni</h2>
                     </div>
                     <p>
-                        <strong>Tutto sulle BLACKPINK!</strong>
-                        <br><br>Da quando hanno <strong>debuttato nel 2016</strong>, le BLACKPINK hanno scatenato una frenesia globale con due acclamatissimi album in studio, collaborazioni con altre superstar mondiali come <strong>Lady Gaga e Dua Lipa</strong>, diventando al contempo il <strong>primo gruppo asiatico ad essere headliner al Coachella</strong> e battendo innumerevoli altri record.
-                        <br><br>Jisoo, Jennie, Rosé e Lisa sono oggi il gruppo più seguito su YouTube (con quasi 100 milioni di subscribers) e il gruppo più seguito su Spotify. Con il loro debutto <strong>The Album (2020)</strong> e il suo seguito <strong>BORN PINK (2022)</strong>, hanno continuato a battere i loro stessi record, con quest'ultimo che ha debuttato al n. 1 della Billboard 200 negli Stati Uniti, l'album più alto di un gruppo femminile in oltre un decennio, e che ha reso le BLACKPINK il primo gruppo K-Pop a raggiungere il n. 1 della UK Official Album Charts.
+                        <strong>Tutto su <?php echo $row['Nome']?>!</strong>
+                        <br><br>
+                        <?php echo $row['Descrizione']?>
                     </p>
                 </div>
             </div>
             <div class="white-filler"></div>
-            <img class="back-image" src="./cards/BLACKPINK_Medium.webp">
+            <img class="back-image" <?php echo 'src="' . $row['Img'] . '"'; ?>>
         </div>
 
         <div id="scaletta-container">
@@ -280,23 +320,17 @@
                     <h2>Scaletta</h2>
                 </div>
                 <br>
-                <strong>Concerto 1</strong>
-                <ol>
-                    <li>Pink Venom</li>
-                    <li>How You Like That</li>
-                    <li>Kill This Love</li>
-                    <li>DDU-DU DDU-DU</li>
-                    <li>Shut Down</li>
-                </ol>
-                
-                <strong>Concerto 2</strong>
-                <ol>
-                    <li>Pink Venom</li>
-                    <li>How You Like That</li>
-                    <li>Kill This Love</li>
-                    <li>DDU-DU DDU-DU</li>
-                    <li>Shut Down</li>
-                </ol>
+
+                <?php
+                foreach ($scalette as $id => $scaletta) {
+                    echo '<strong>' . $scaletta['nome'] . '</strong>';
+                    echo '<ol>';
+                    foreach ($scaletta['canzoni'] as $canzone) {
+                        echo '<li>' . $canzone . '</li>';
+                    }
+                    echo '</ol>';
+                }
+                ?>
             </div>
         </div>
 
@@ -312,45 +346,45 @@
                     <div id="divider-faq"><div></div></div>
 
                     <div class="elenco-faq" data-cat="domanda1">
-                        <h3>Dove si esibiranno le BLACKPINK in Italia?</h3>
+                        <h3>Come si descrive in breve <?php echo $row['Nome']?>?</h3>
                         <img class="faq-arrow" src="./icons/downarrowblack.png"></img>
                     </div>
 
                     <div class="faqlist hidden" data-cat="domanda1">                   
-                        <p>Le BLACKPINK di esibiranno in Italia il 6 agosto 2025 presso l' Ippodromo SNAI La Maura a Milano</p>
+                        <p><?php echo $row['Hero']?></p>
                     </div>
 
                     <div id="divider-faq"><div></div></div>
 
                     <div class="elenco-faq" data-cat="domanda2">
-                        <h3>Quando apriranno le vendite per i biglietti delle BLACKPINK?</h3>
+                        <h3>I biglietti per l'evento di <?php echo $row['Nome']?> sono nominativi?</h3>
                         <img class="faq-arrow" src="./icons/downarrowblack.png"></img>
                     </div>
 
                     <div class="faqlist hidden" data-cat="domanda2">                   
-                        <p>I biglietti per il concerto delle BLACKPINK saranno messi in vendita da giovedì 27 febbraio 2025 alle ore 12:00</p>
+                        <p>I biglietti non sono nominativi, ma è necessario un account Ticketmaster per acquistarli.</p>
                     </div>
 
                     <div id="divider-faq"><div></div></div>
 
                     <div class="elenco-faq" data-cat="domanda3">
-                        <h3>Come posso cambiare nominativo su un biglietto di un concerto delle BLACKPINK?</h3>
+                        <h3>Come posso ottenere un rimborso per un biglietto di <?php echo $row['Nome']?>?</h3>
                         <img class="faq-arrow" src="./icons/downarrowblack.png"></img>
                     </div>
 
                     <div class="faqlist hidden" data-cat="domanda3">                   
-                        <p>Per richiedere il cambio nominativo per un biglietto di un concerto delle BLACKPINK consulta le <a class="faq-link" href="#">FAQ sui biglietti nominativi.</a></p>
+                        <p>Per richiedere il rimborso per un biglietto consulta le <a class="faq-link" href="#">FAQ sui rimborsi.</a></p>
                     </div>
 
                     <div id="divider-faq"><div></div></div>
 
                     <div class="elenco-faq" data-cat="domanda4">
-                        <h3>Come posso rivendere un biglietto di un concerto delle BLACKPINK?</h3>
+                        <h3>Come posso rivendere un biglietto di <?php echo $row['Nome']?>?</h3>
                         <img class="faq-arrow" src="./icons/downarrowblack.png"></img>
                     </div>
 
                     <div class="faqlist hidden" data-cat="domanda4">                   
-                        <p>Per rivendere un biglietto di un concerto delle BLACKPINK consulta le <a class="faq-link" href="#">FAQ sulla rivendita dei biglietti.</a></p>
+                        <p>Per rivendere un biglietto di <?php echo $row['Nome']?> consulta le <a class="faq-link" href="#">FAQ sulla rivendita dei biglietti.</a></p>
                     </div>
 
                     <div id="divider-faq"><div></div></div>

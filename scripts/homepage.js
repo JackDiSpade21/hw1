@@ -3,39 +3,39 @@ const api_spotify = '';
 const secret_spotify = '';
 let spotify_token = '';
 
-document.addEventListener("click", closeSpotifyBox);
-const modal_spotify = document.querySelector("#spotifybox");
-const spotify_songs = document.querySelector("#spotify-songs");
-const spotifyTitle = document.querySelector("#spotify-title");
-const spotifyPic = document.querySelector("#spotify-pic");
-const closeButtonSpotify = document.querySelector("#close-button-spotify");
-closeButtonSpotify.addEventListener("click", closeButtonSpotifyBox);
+// document.addEventListener("click", closeSpotifyBox);
+// const modal_spotify = document.querySelector("#spotifybox");
+// const spotify_songs = document.querySelector("#spotify-songs");
+// const spotifyTitle = document.querySelector("#spotify-title");
+// const spotifyPic = document.querySelector("#spotify-pic");
+// const closeButtonSpotify = document.querySelector("#close-button-spotify");
+// closeButtonSpotify.addEventListener("click", closeButtonSpotifyBox);
 
-fetch('./keys.txt')
-    .then(response => response.text(), onError)
-    .then(text => {
-        const api_ticketmaster = text.split('\n')[0].trim();
-        const api_spotify = text.split('\n')[1].trim();
-        const secret_spotify = text.split('\n')[2].trim();
-        console.log('API Key spotify:', api_spotify);
-        console.log('Secret Spotify:', secret_spotify);
-        console.log('API Key ticketmaster:', api_ticketmaster);
+fetch('http://localhost/hw1/api/gethomecards.php')
+    .then(onResponseTicket, onError)
+    .then(onJSONTicket);
 
-        fetch('https://app.ticketmaster.com/discovery/v2/events.json' + '?apikey=' + api_ticketmaster + '&locale=it-it' + '&sort=id,asc' + '&size=50')
-            .then(onResponseTicket, onError)
-            .then(onJSONTicket);
+// fetch('./keys.txt')
+//     .then(response => response.text(), onError)
+//     .then(text => {
+//         const api_ticketmaster = text.split('\n')[0].trim();
+//         const api_spotify = text.split('\n')[1].trim();
+//         const secret_spotify = text.split('\n')[2].trim();
+//         console.log('API Key spotify:', api_spotify);
+//         console.log('Secret Spotify:', secret_spotify);
+//         console.log('API Key ticketmaster:', api_ticketmaster);
 
         
-        fetch("https://accounts.spotify.com/api/token",{
-                method: "post",
-                body: 'grant_type=client_credentials',
-                headers:
-                {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'Authorization': 'Basic ' + btoa(api_spotify + ':' + secret_spotify)
-                }
-            }).then(onTokenResponse, onError).then(onTokenJson);
-    })
+//         fetch("https://accounts.spotify.com/api/token",{
+//                 method: "post",
+//                 body: 'grant_type=client_credentials',
+//                 headers:
+//                 {
+//                     'Content-Type': 'application/x-www-form-urlencoded',
+//                     'Authorization': 'Basic ' + btoa(api_spotify + ':' + secret_spotify)
+//                 }
+//             }).then(onTokenResponse, onError).then(onTokenJson);
+//     })
 
 function onResponseTicket(response) {
     if (response.ok) {
@@ -53,23 +53,18 @@ function onJSONTicket(json) {
     console.log(json);
 
     const events = new Map();
-    const results = json._embedded.events.length;
+    const results = json.length;
 
     for (let i = 0; i < results; i++) {
-        const embedded = json._embedded.events[i];
-        const name = embedded._embedded.attractions[0].name;
-        const type = embedded.classifications[0].segment.name;
+        const item = json[i];
+        const id = item.ID;
+        const name = item.Nome;
+        const type = item.Categoria;
+        const imageUrl = item.Img;
+        const herodes = item.Hero;
 
-        let imageUrl = '';
-        for (const image of embedded.images) {
-            if (image.ratio === "16_9" && image.height > 500) {
-                imageUrl = image.url;
-                break;
-            }
-        }
-
-        if (!events.has(name)) {
-            events.set(name, { name, type, imageUrl });
+        if (!events.has(id)) {
+            events.set(id, { id, name, type, imageUrl, herodes });
         }
     }
 
@@ -79,24 +74,37 @@ function onJSONTicket(json) {
     const mostwanted = document.querySelector('#most-wanted');
     const discover = document.querySelector('#discover');
 
+    const hero = document.querySelector('#hero');
+    const herodes = document.querySelector('#description');
+
     let index = 0;
     for (const [key, event] of events) {
-        if (index >= 4) break;
-        createCard(event.name, event.type, event.imageUrl, maincards, ['cmain']);
+
+        if (index == 0){
+            hero.style.backgroundImage = 'url(' + event.imageUrl + ')';
+            herodes.querySelector('h3').textContent = event.name;
+            herodes.querySelector('p').textContent = event.herodes;
+            herodes.querySelector('a').href = 'eventpage.php?id=' + event.id;
+            index++;
+            continue;
+        }
+
+        if (index >= 5) break;
+        createCard(event.name, event.type, event.imageUrl, maincards, ['cmain'], event.id);
         index++;
     }
 
     index = 0;
     for (const [key, event] of events) {
-        if (index < 5){
+        if (index < 6){
             index++;
             continue;
-        }else if (index === 5){
-            createCard(event.name, event.type, event.imageUrl, mostwanted, ['featured']);
-        }else if (index >= 6 && index < 8){
-            createCard(event.name, event.type, event.imageUrl, mostwanted, ['featured', 'feat-max-two']);
-        }else if (index < 10){
-            createCard(event.name, event.type, event.imageUrl, mostwanted, ['featured', 'feat-max']);
+        }else if (index === 6){
+            createCard(event.name, event.type, event.imageUrl, mostwanted, ['featured'], event.id);
+        }else if (index >= 7 && index < 9){
+            createCard(event.name, event.type, event.imageUrl, mostwanted, ['featured', 'feat-max-two'], event.id);
+        }else if (index < 11){
+            createCard(event.name, event.type, event.imageUrl, mostwanted, ['featured', 'feat-max'], event.id);
         }else{
             break;
         }
@@ -105,15 +113,15 @@ function onJSONTicket(json) {
 
     index = 0;
     for (const [key, event] of events) {
-        if (index < 10){
+        if (index < 11){
             index++;
             continue;
-        }else if (index === 11){
-            createCard(event.name, event.type, event.imageUrl, discover, ['dis']);
         }else if (index === 12){
-            createCard(event.name, event.type, event.imageUrl, discover, ['dis', 'dis-max-two']);
-        }else if (index < 16){
-            createCard(event.name, event.type, event.imageUrl, discover, ['dis', 'dis-max']);
+            createCard(event.name, event.type, event.imageUrl, discover, ['dis'], event.id);
+        }else if (index === 13){
+            createCard(event.name, event.type, event.imageUrl, discover, ['dis', 'dis-max-two'], event.id);
+        }else if (index < 17){
+            createCard(event.name, event.type, event.imageUrl, discover, ['dis', 'dis-max'], event.id);
         }else{
             break;
         }
@@ -123,11 +131,11 @@ function onJSONTicket(json) {
 
 }
 
-function createCard(name, type, imageUrl, section, classes) {
+function createCard(name, type, imageUrl, section, classes, id) {
 
     const article = document.createElement('a');
     article.classList.add('card');
-    article.href = '#';
+    article.href = 'eventpage.php?id=' + id;
 
     if(classes) {
         for (let i in classes) {
@@ -176,10 +184,6 @@ function createCard(name, type, imageUrl, section, classes) {
         span.classList.add('cat');
         span.textContent = 'biglietti';
         article.appendChild(span);
-    }
-
-    if(type === 'Musica') {
-        article.addEventListener('click', openSpotifyBox);
     }
 
     return;

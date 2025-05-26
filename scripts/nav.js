@@ -110,6 +110,10 @@ function openModalNav(event) {
     } else if (event.currentTarget === navButtons[4]) {
         fillModalNav(MODAL_TEMPO, 5, 4);
     } else if (event.currentTarget === navButtons[5]) {
+        for(let i = 0; i < otherButtons.length; i++) {
+            otherButtons[i].classList.remove('other-active');
+        }
+        otherTempo.classList.add('other-active');
         fillModalNavOther(MODAL_TEMPO, 5, 4);
     }
 }

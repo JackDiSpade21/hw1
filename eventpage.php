@@ -36,7 +36,7 @@
 ?>
 <html>
 <head>
-    <title>Ticketmaster | Biglietti per <?php echo $row['Nome']?></title>
+    <title>Biglietti per <?php echo $row['Nome']?> | Ticketmaster</title>
     <link rel="icon" type="image/x-icon" href="./favicon.ico">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="UTF-8">
@@ -235,79 +235,21 @@
         </div>
     </nav>
 
-    <section id="main">
+    <section id="main" <?php echo 'data-id='.$_GET['id']?>>
         <div id="event-container">
             <div class="width-limiter">
                 <div class="section-title">
                     <p></p>
                     <h2>Eventi</h2>
                 </div>
+
                 <div id="event-box">
                     <div class="event-count">
-                        <h2><strong>3</strong> Eventi futuri</h2>
-                    </div>
-                    <div class="event-country">
-                        <strong>Italia</strong>
-                        <p>2 eventi</p>
-                    </div>
-                    <div class="event-entry">
-                        <div class="event-info">
-                            <div class="event-date">
-                                <p>AGO</p>
-                                <strong>06</strong>
-                            </div>
-                            <div class="event-desc">
-                                <p>mer - 20:00</p>
-                                <strong>Milano - Ippodromo SNAI La Maura</strong>
-                                <p>BLACKPINK WORLD TOUR IN MILAN</p>
-                            </div>
-                            <a href="#" class="event-buy" data-event-id="id">
-                                <p>Biglietti</p>
-                                <img src="./icons/freccia.png"></img>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="event-entry">
-                        <div class="event-info">
-                            <div class="event-date">
-                                <p>AGO</p>
-                                <strong>06</strong>
-                            </div>
-                            <div class="event-desc">
-                                <p>mer - 20:00</p>
-                                <strong>Milano - Ippodromo SNAI La Maura</strong>
-                                <p>BLACKPINK WORLD TOUR IN MILAN</p>
-                            </div>
-                            <a href="#" class="event-buy" data-event-id="id">
-                                <p>Biglietti</p>
-                                <img src="./icons/freccia.png"></img>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="event-split"></div>
-                    <div class="event-country">
-                        <strong>Eventi internazionali</strong>
-                        <p>1 evento</p>
-                    </div>
-                    <div class="event-entry">
-                        <div class="event-info">
-                            <div class="event-date">
-                                <p>AGO</p>
-                                <strong>06</strong>
-                            </div>
-                            <div class="event-desc">
-                                <p>mer - 20:00</p>
-                                <strong>Milano - Ippodromo SNAI La Maura</strong>
-                                <p>BLACKPINK WORLD TOUR IN MILAN</p>
-                            </div>
-                            <a href="#" class="event-buy" data-event-id="id">
-                                <p>Biglietti</p>
-                                <img src="./icons/freccia.png"></img>
-                            </a>
-                        </div>
+                        <h2><strong id="eventi-futuri">0</strong> Eventi futuri</h2>
                     </div>
                 </div>
             </div>
+
         </div>
 
         <div id="info-container">
@@ -325,7 +267,7 @@
                         <?php
                             if(strcmp($row['Categoria'], 'Musica') == 0) {
                                 echo '<a class="spotify-button" data-id='.$_GET['id'].' data-name="'.$row['Nome'].'">
-                                        <span>Artista</span>
+                                        <span>Spotify</span>
                                         <img src="./icons/arrowblack.png"></img>
                                     </a>';
                             }

@@ -5,3 +5,6 @@ WHERE artista.ID = 28;
 
 SELECT nome, categoria FROM artista
 WHERE artista.ID = 28;
+
+SELECT * FROM evento
+WHERE Artista = 28;

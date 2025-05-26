@@ -15,7 +15,7 @@ function onError(err) {
 }
 
 function onJSONTicket(json) {
-    console.log(json);
+    //console.log(json);
 
     const events = new Map();
     const results = json.length;
@@ -33,7 +33,7 @@ function onJSONTicket(json) {
         }
     }
 
-    console.log(Array.from(events.values()));
+    //console.log(Array.from(events.values()));
 
     const maincards = document.querySelector('#main-cards');
     const mostwanted = document.querySelector('#most-wanted');

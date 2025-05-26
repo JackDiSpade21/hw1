@@ -89,7 +89,7 @@
             <div id="mobile-menu">
                 <img src="./icons/menu.png">
             </div>
-            <a href="./index.html" class="logo">
+            <a href="./index.php" class="logo">
                 <img src="./icons/logo.png">
             </a>
             <div id="navigation">
@@ -106,7 +106,7 @@
                 <input type="text" placeholder="Artista, Evento o Località"></input>
                 <div id="sbutton"><img id="search" src="./icons/search.png"></img></div>
             </div>
-            <a id="login" href="./login.html"><img id="person" src="./icons/person.png"></img><p>Accedi/Registrati</p></a>
+            <a id="login" href="./login.php"><img id="person" src="./icons/person.png"></img><p>Accedi/Registrati</p></a>
         </div>
 
         <div id="modal-nav-desktop" class="hidden">
@@ -149,7 +149,7 @@
     <section id="mobile-menu-nav" class="hidden">
         <div id="menutop">
             <div class="menu-item">
-                <a href="./index.html" class="logo">
+                <a href="./index.php" class="logo">
                     <img src="./icons/logo.png">
                 </a>
                 <div id="close-button"><img src="./icons/cross.png"></div>
@@ -322,10 +322,14 @@
                         <br><br>
                         <?php echo $row['Descrizione']?>
 
-                        <a class="spotify-button" data-id=<?php echo $_GET['id']?> data-name="<?php echo $row['Nome']?>">
-                                <span>Spotify</span>
-                                <img src="./icons/arrowblack.png"></img>
-                        </a>
+                        <?php
+                            if(strcmp($row['Categoria'], 'Musica') == 0) {
+                                echo '<a class="spotify-button" data-id='.$_GET['id'].' data-name="'.$row['Nome'].'">
+                                        <span>Artista</span>
+                                        <img src="./icons/arrowblack.png"></img>
+                                    </a>';
+                            }
+                        ?>
                     </p>
                 </div>
             </div>
@@ -419,7 +423,7 @@
     <footer>
         <div id="footer">
             <div id="promo">
-                <a href="./index.html" class="logo">
+                <a href="./index.php" class="logo">
                     <img src="./icons/logo.png">
                 </a>
                 <p>Seguiteci</p>

@@ -7,7 +7,9 @@ const closeButtonSpotify = document.querySelector("#close-button-spotify");
 closeButtonSpotify.addEventListener("click", closeButtonSpotifyBox);
 
 const spotifyButton = document.querySelector(".spotify-button");
-spotifyButton.addEventListener("click", openSpotifyBox);
+if(spotifyButton) {
+    spotifyButton.addEventListener("click", openSpotifyBox);
+}
 
 let spotifyLoaded = false;
 

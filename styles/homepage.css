@@ -267,84 +267,6 @@ body{
     margin: 5% 0 5% 2%;
 }
 
-.spotifybox-style h2{
-    text-align: center;
-}
-
-.spotifybox-style{
-    position: fixed;
-    z-index: 2;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 450px;
-    background-color: rgb(18, 18, 18);
-    color: white;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
-    padding: 2%;
-    border-radius: 15px;
-}
-
-#spotify-close{
-    display: flex;
-    justify-content: end;
-    width: 100%;
-}
-
-#spotify-songs{
-    display: flex;
-    width: 100%;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
-.songbox{
-    display: flex;
-    width: 100%;
-    justify-content: center;
-    align-items: center;
-}
-
-.songbox img{
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-}
-
-.song-info{
-    margin-left: 5%;
-    margin-right: 30px;
-    width: 50%;
-}
-
-#spotify-pic{
-    width: 250px;
-    height: 250px;
-    border-radius: 50%;
-}
-
-#spotify-close img{
-    width: 30px;
-    height: 30px;
-}
-
-#close-button-spotify{
-    display: flex;
-    width: 42px;
-    height: 42px;
-    align-items: center;
-    justify-content: center;
-    border-radius: 4px;
-}
-
-#close-button-spotify:hover{
-    background-color: rgb(77, 77, 77);
-    cursor: pointer;
-}
-
 .hidden{
     display: none;
 }
@@ -423,20 +345,6 @@ body{
 }
 
 @media (max-width: 720px) {
-
-    #spotifybox{
-        transform: none;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        padding: 0%;
-        border-radius: 0;
-    }
-    
-    #spotify-close{
-        margin-right: 5%;
-    }
 
     #scroll-arrow.sc-feat-right{
         display: block;

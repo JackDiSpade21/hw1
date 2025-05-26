@@ -44,6 +44,7 @@
     <script src="./scripts/nav.js" defer></script>
     <script src="./scripts/footer.js" defer></script>
     <script src="./scripts/eventpage.js" defer></script>
+    <script src="./scripts/spotifybox.js" defer></script>
     <script src="./scripts/menu.js" defer></script>
     <link rel="stylesheet" type="text/css" href="./styles/nav.css">
     <link rel="stylesheet" type="text/css" href="./styles/header.css">
@@ -53,6 +54,20 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 </head>
 <body>
+
+    <div id="spotifybox" class="spotifybox-style hidden">
+        <div id="spotify-close">
+            <div id="close-button-spotify"><img src="./icons/cross.png"></div>
+        </div>
+
+        <img id="spotify-pic" src="./icons/person.png">
+        <h2 id="spotify-title">Brani popolari di <br></h2>
+
+        <div id="spotify-songs">
+            
+        </div>
+
+    </div>
 
     <header>
         <div id="languages">
@@ -306,6 +321,11 @@
                         <strong>Tutto su <?php echo $row['Nome']?>!</strong>
                         <br><br>
                         <?php echo $row['Descrizione']?>
+
+                        <a class="spotify-button" data-id=<?php echo $_GET['id']?> data-name="<?php echo $row['Nome']?>">
+                                <span>Spotify</span>
+                                <img src="./icons/arrowblack.png"></img>
+                        </a>
                     </p>
                 </div>
             </div>

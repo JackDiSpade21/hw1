@@ -17,21 +17,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 </head>
 <body>
-
-    <div id="spotifybox" class="spotifybox-style hidden">
-        <div id="spotify-close">
-            <div id="close-button-spotify"><img src="./icons/cross.png"></div>
-        </div>
-
-        <img id="spotify-pic" src="./icons/person.png">
-        <h2 id="spotify-title">Brani popolari di <br></h2>
-
-        <div id="spotify-songs">
-            
-        </div>
-
-    </div>
-
     <header>
         <div id="languages">
             <img id="flag"src="./icons/italy.png"></img>

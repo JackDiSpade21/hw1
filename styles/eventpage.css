@@ -422,6 +422,104 @@ ol{
     text-decoration: underline;
 }
 
+.spotifybox-style h2{
+    text-align: center;
+}
+
+.spotifybox-style{
+    position: fixed;
+    z-index: 3;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 450px;
+    background-color: rgb(18, 18, 18);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    padding: 2%;
+    border-radius: 15px;
+}
+
+#spotify-close{
+    display: flex;
+    justify-content: end;
+    width: 100%;
+}
+
+#spotify-songs{
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+#spotify-pic{
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+}
+
+#spotify-close img{
+    width: 30px;
+    height: 30px;
+}
+
+#close-button-spotify{
+    display: flex;
+    width: 42px;
+    height: 42px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+}
+
+#close-button-spotify:hover{
+    background-color: rgb(77, 77, 77);
+    cursor: pointer;
+}
+
+.songbox{
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+.songbox img{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+
+.song-info{
+    margin-left: 5%;
+    margin-right: 30px;
+    width: 50%;
+}
+
+.spotify-button{
+    margin-top: 20px;
+    display: flex;
+    flex-direction: row;
+    padding: 10px;
+    background-color: rgb(45, 216, 102);
+    cursor: pointer;
+    color: black;
+    outline: black 1px solid;
+    font-weight: 600;
+    align-items: center;
+    justify-content: space-between;
+    width: 150px;
+    border-radius: 8px;
+}
+
+.spotify-button:hover{
+    background-color: rgb(35, 176, 82);
+}
+
 @media (min-width: 720px) {
     #hero {
         min-height: 360px;
@@ -429,7 +527,6 @@ ol{
         padding-bottom: 48px;
     }
 }
-
 
 @media (min-width: 900px) {
     #hero {
@@ -517,5 +614,26 @@ ol{
 
     #event-container{
         padding: 40px 96px 80px 96px;
+    }
+}
+
+@media (max-width: 720px){
+    #spotifybox{
+        transform: none;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        padding: 0%;
+        border-radius: 0;
+    }
+    
+    #spotify-close{
+        margin-right: 5%;
+    }
+
+    #event-nav {
+        padding-right: 0px;
+        padding-left: 0px;
     }
 }

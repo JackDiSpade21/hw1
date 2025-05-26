@@ -1,8 +1,11 @@
 const faqElement = document.querySelectorAll(".elenco-faq");
+const faqSection = document.querySelectorAll(".faqlist");
+
+
+
 for(let i = 0; i < faqElement.length; i++){
     faqElement[i].addEventListener("click", togglefaqSection);
 }
-const faqSection = document.querySelectorAll(".faqlist");
 
 function togglefaqSection(event){
     const imgChild = event.currentTarget.querySelector("img");
@@ -29,4 +32,3 @@ function togglefaqSection(event){
     }
 
 }
-

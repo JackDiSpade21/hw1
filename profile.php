@@ -5,6 +5,11 @@
         exit();
     }
 
+    $firstLogin = false;
+    if(isset($_GET['firstLogin']) && $_GET['firstLogin'] == 'true') {
+        $firstLogin = true;
+    }
+
     $conn = mysqli_connect("localhost", "root", "", "ticketmaster") or die(mysqli_connect_error());
     $email = mysqli_real_escape_string($conn, $_SESSION['email']);
     
@@ -214,6 +219,11 @@
                 </div>
 
                 <div id="my-data" class="">
+                    <h4 
+                        <?php if($firstLogin) echo 'class="welcome"'; else echo 'class="hidden"'; ?>>
+                    Benvenuto su TicketMaster!<br>Questa è la area personale, potrai
+                    vedere i tuoi biglietti acquistati quì.<br>Torna alla home per vedere gli eventi!</h4>
+
                     <div class="section-title margin-bottom-double">
                         <p></p>
                         <h2>I tuoi dati personali</h2>

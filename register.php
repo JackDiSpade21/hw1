@@ -1,3 +1,105 @@
+<?php
+    session_start();
+    if (isset($_SESSION['email'])) {
+        header("Location: ./index.php");
+        exit();
+    }
+
+    $errore = false;
+    $exists = false;
+
+    if(isset($_POST['email']) && isset($_POST['confirmEmail']) && isset($_POST['password']) 
+    && isset($_POST['confirmPassword']) && isset($_POST['numberPrefix'])
+    && isset($_POST['number']) && isset($_POST['name']) && isset($_POST['surname']
+    ) && isset($_POST['birth']) && isset($_POST['privacy'])
+    && isset($_POST['terms']) && isset($_POST['birthPlace'])) {
+
+        $conn = mysqli_connect("localhost", "root", "", "ticketmaster") or die(mysqli_connect_error());
+        $email = mysqli_real_escape_string($conn, $_POST['email']);
+        $confirmEmail = mysqli_real_escape_string($conn, $_POST['confirmEmail']);
+        $password = mysqli_real_escape_string($conn, $_POST['password']);
+        $confirmPassword = mysqli_real_escape_string($conn, $_POST['confirmPassword']);
+        $numberPrefix = mysqli_real_escape_string($conn, $_POST['numberPrefix']);
+        $number = mysqli_real_escape_string($conn, $_POST['number']);
+        $name = mysqli_real_escape_string($conn, $_POST['name']);
+        $surname = mysqli_real_escape_string($conn, $_POST['surname']);
+        $birth = mysqli_real_escape_string($conn, $_POST['birth']);
+        $birthPlace = mysqli_real_escape_string($conn, $_POST['birthPlace']);
+
+
+        if($birthPlace !== "")
+            $birthPlace = mysqli_real_escape_string($conn, $_POST['birthPlace']);
+        else{
+            $birthPlace = "NULL";
+            echo "VUOTOOOOOO";
+        }
+
+        $newsletter = isset($_POST['newsletter']) ? 1 : 0;
+
+        if(strlen($password) < 8 || strlen($password) > 32) {
+            $errore = true;
+        }
+
+        if($_POST['privacy'] !== "agreePrivacy" || $_POST['terms'] !== "agreeTerms") {
+            $errore = true;
+        }
+
+        if(strlen($number) < 9) {
+            $errore = true;
+        }
+
+        if(
+            $numberPrefix !== "+39" &&
+            $numberPrefix !== "+1" &&
+            $numberPrefix !== "+44" &&
+            $numberPrefix !== "+49" &&
+            $numberPrefix !== "+33" &&
+            $numberPrefix !== "+34")
+        {
+            $errore = true;
+        }
+
+        $today = new DateTime();
+        $birthDate = DateTime::createFromFormat('Y-m-d', $birth);
+        if($birthDate) {
+            $age = $today->diff($birthDate)->y;
+            if($age < 18 || $age > 100) {
+                $errore = true;
+            }
+        } else {
+            $errore = true;
+        }
+
+        if ($email !== $confirmEmail || $password !== $confirmPassword) {
+            $errore = true;
+        } else if (!$errore) {
+            $queryCheckEmail = "SELECT * FROM Utente WHERE Mail = '$email'";
+            $resCheckEmail = mysqli_query($conn, $queryCheckEmail) or die(mysqli_error($conn));
+            if (mysqli_num_rows($resCheckEmail) > 0) {
+                $errore = true;
+                $exists = true;
+            } else {
+
+                $queryInsert = "INSERT INTO Utente (Mail, Psw, Tel, Nome, Cognome, Nascita, Luogo, Newsletter) 
+                VALUES ('$email', '$password', '$numberPrefix$number', '$name', '$surname', '$birth', $birthPlace, '$newsletter')";
+                  
+                if (mysqli_query($conn, $queryInsert)) {
+                    $_SESSION["email"] = $_POST["email"];
+                    mysqli_close($conn);
+                    mysqli_free_result($resCheckEmail);
+                    header("Location: ./profile.php?firstLogin=true");
+                    exit();
+                } else {
+                    $errore = true;
+                }
+            }
+            mysqli_free_result($resCheckEmail);
+        }
+        
+        mysqli_close($conn);
+    }
+?>
+
 <html>
 <head>
     <title>Registrati | Ticketmaster</title>
@@ -6,6 +108,7 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="./styles/auth.css">
     <script src="./scripts/footer.js" defer></script>
+    <script src="./scripts/auth.js" defer></script>
     <link rel="stylesheet" type="text/css" href="./styles/nav.css">
     <link rel="stylesheet" type="text/css" href="./styles/header.css">
     <link rel="stylesheet" type="text/css" href="./styles/footer.css">
@@ -32,7 +135,23 @@
     </nav>
 
     <section id="main">
-        <form>
+        <h4 id="error" 
+            <?php 
+            if ($errore) { 
+                echo 'class="error"'; 
+            } else { 
+                echo 'class="error hidden"'; 
+            }
+            ?>>
+            <?php
+                if($exists) {
+                    echo "L'email inserita è già in uso.";
+                } else {
+                    echo "Si è verificato un errore durante la registrazione. Riprova.";
+                }
+            ?>
+        </h4>
+        <form name="register" method="post">
             <h2>Sei un nuovo utente</h2>
             <p class="margin-bottom">Già registrato?&nbsp;
                 <a href="./login.php">Accedi</a>
@@ -46,26 +165,26 @@
                 <div class="input-field">
                     <label>Cellulare *</label>
                     <div>
-                        <select name="number-prefix" class="number-prefix">
-                            <option value="39">IT +39</option>
-                            <option value="1">US +1</option>
-                            <option value="44">UK +44</option>
-                            <option value="49">DE +49</option>
-                            <option value="33">FR +33</option>
-                            <option value="34">ES +34</option>
+                        <select name="numberPrefix" class="number-prefix">
+                            <option selected value="+39">IT +39</option>
+                            <option value="+1">US +1</option>
+                            <option value="+44">UK +44</option>
+                            <option value="+49">DE +49</option>
+                            <option value="+33">FR +33</option>
+                            <option value="+34">ES +34</option>
                         </select>
-                        <input name="phone" required="required" value="" type="tel">
+                        <input name="number" required value="" type="tel">
                     </div>
                 </div>
                 <h4>Dati di accesso</h4>
                 <div class="input-grouped">
                     <div class="input-field">
-                        <label>Email *</label>
-                        <input name="email" required="required" value="" type="email">
+                        <label for="email">Email *</label>
+                        <input name="email" required value="" type="email">
                     </div>
                     <div class="input-field">
-                        <label>Conferma Email *</label>
-                        <input name="confirm-email" required="required" value="" type="email">
+                        <label for="confirmEmail">Conferma Email *</label>
+                        <input name="confirmEmail" required value="" type="email">
                     </div>
                 </div>
                 <p class="p-subtitle italic margin-bottom">La password deve essere lunga tra 8 e 32 caratteri, deve contenere almeno 
@@ -73,38 +192,38 @@
                 </p>
                 <div class="input-grouped">
                     <div class="input-field">
-                        <label>Password *</label>
-                        <input name="password" required="required" value="" type="password">
+                        <label for="password">Password *</label>
+                        <input name="password" required value="" type="password">
                     </div>
                     <div class="input-field">
-                        <label>Conferma Password *</label>
-                        <input name="confirm-password" required="required" value="" type="password">
+                        <label for="confirmPassword">Conferma Password *</label>
+                        <input name="confirmPassword" required value="" type="password">
                     </div>
                 </div>
                 <h4>I miei dati</h4>
                 <div class="input-grouped">
                     <div class="input-field">
-                        <label>Nome *</label>
-                        <input name="name" required="required" value="" type="text">
+                        <label for="name">Nome *</label>
+                        <input name="name" required value="" type="text">
                     </div>
                     <div class="input-field">
-                        <label>Cognome *</label>
-                        <input name="surname" required="required" value="" type="text">
+                        <label for="surname">Cognome *</label>
+                        <input name="surname" required value="" type="text">
                     </div>
                 </div>
                 <div class="input-grouped">
                     <div class="input-field">
-                        <label>Data di nascita *</label>
-                        <input name="birth" required="required" value="" type="date">
+                        <label for="birth">Data di nascita *</label>
+                        <input name="birth" required value="" type="date">
                     </div>
                     <div class="input-field">
-                        <label>Luogo di nascita</label>
-                        <input name="birth-place" value="" type="text">
+                        <label for="birthPlace">Luogo di nascita</label>
+                        <input name="birthPlace" value="" type="text">
                     </div>
                 </div>
                 <h4 class="margin-bottom">Newsletter</h4>                  
-                <label class="margin-bottom">
-                    <input type="checkbox" name="newsletter" value="newsletter"/>
+                <label for="newsletter" class="margin-bottom">
+                    <input type="checkbox" id="newsletter" name="newsletter" value="newsletter"/>
                     Sì, desidero rimanere aggiornato sulle ultime news dei miei 
                     eventi preferiti. Presale, promozioni, nuovi show e tanto altro! 
                     (facoltativo)
@@ -114,10 +233,10 @@
                     <a href="#">Informativa Privacy</a> *
                 </p>
                 <div class="input-grouped margin-bottom-double">
-                    <label><input required="required" type="radio" name="privacy" value="agree_privacy"/>
+                    <label><input required type="radio" name="privacy" value="agreePrivacy"/>
                         Acconsento
                     </label>
-                    <label><input required="required" type="radio" name="privacy" value="disagree_privacy"/>
+                    <label><input required type="radio" name="privacy" value="disagreePrivacy"/>
                         Non acconsento
                     </label>
                 </div>
@@ -125,14 +244,14 @@
                     <a href="#">Termini e condizioni di servizio</a> *
                 </p>
                 <div class="input-grouped margin-bottom-double">
-                    <label><input required="required" type="radio" name="terms" value="agree_terms"/>
+                    <label><input required type="radio" name="terms" value="agreeTerms"/>
                         Acconsento
                     </label>
-                    <label><input required="required" type="radio" name="terms" value="disagree_terms"/>
+                    <label><input required type="radio" name="terms" value="disagreeTerms"/>
                         Non acconsento
                     </label>
                 </div>
-                <input class="button-submit margin-bottom-double" value="Accetta e continua" name="submit_btn" type="submit">
+                <input class="button-submit margin-bottom-double" value="Accetta e crea" name="submit_btn" type="submit">
             </div>
         </form>
     </section>
@@ -273,4 +392,4 @@
         </div>
     </footer>
 </body>
-</html>        
+</html>

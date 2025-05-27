@@ -76,6 +76,11 @@ p{
     width: 40%;
 }
 
+.welcome{
+    color: green;
+    margin: 0 0 20px 0;
+}
+
 .button-submit {
     text-decoration: none;
     font-weight: 600;

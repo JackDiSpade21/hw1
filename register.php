@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Accedi | Ticketmaster</title>
+    <title>Registrati | Ticketmaster</title>
     <link rel="icon" type="image/x-icon" href="./favicon.ico">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="UTF-8">
@@ -25,7 +25,7 @@
     </header>
     <nav class="nav-auth">
         <div id="left-navbar">
-            <a href="./index.html" class="logo">
+            <a href="./index.php" class="logo">
                 <img src="./icons/logo.png">
             </a>
         </div>
@@ -33,28 +33,106 @@
 
     <section id="main">
         <form>
-            <h2>Login</h2>
-            <p class="margin-bottom">Non ancora registrato?&nbsp;
-                <a href="./register.html">Registrati</a>
+            <h2>Sei un nuovo utente</h2>
+            <p class="margin-bottom">Già registrato?&nbsp;
+                <a href="./login.php">Accedi</a>
             </p>
             <div class="input-container">
+                <h4>Dati di autenticazione</h4>
+                <p class="p-subtitle italic margin-bottom">Se non l'hai ancora fatto, ti ricordiamo che 
+                    è necessario convalidare il tuo numero di cellulare utilizzando il codice di conferma 
+                    OTP che ti verrà inviato tramite SMS
+                </p>
+                <div class="input-field">
+                    <label>Cellulare *</label>
+                    <div>
+                        <select name="number-prefix" class="number-prefix">
+                            <option value="39">IT +39</option>
+                            <option value="1">US +1</option>
+                            <option value="44">UK +44</option>
+                            <option value="49">DE +49</option>
+                            <option value="33">FR +33</option>
+                            <option value="34">ES +34</option>
+                        </select>
+                        <input name="phone" required="required" value="" type="tel">
+                    </div>
+                </div>
+                <h4>Dati di accesso</h4>
                 <div class="input-grouped">
                     <div class="input-field">
-                        <label>Email</label>
+                        <label>Email *</label>
                         <input name="email" required="required" value="" type="email">
                     </div>
                     <div class="input-field">
-                        <label>Password&nbsp;
-                            <a class="recovery" href="#">Recupera</a>
-                        </label>
+                        <label>Conferma Email *</label>
+                        <input name="confirm-email" required="required" value="" type="email">
+                    </div>
+                </div>
+                <p class="p-subtitle italic margin-bottom">La password deve essere lunga tra 8 e 32 caratteri, deve contenere almeno 
+                    una lettera maiuscola, una lettera minuscola e un numero.
+                </p>
+                <div class="input-grouped">
+                    <div class="input-field">
+                        <label>Password *</label>
                         <input name="password" required="required" value="" type="password">
                     </div>
-                </div>                 
+                    <div class="input-field">
+                        <label>Conferma Password *</label>
+                        <input name="confirm-password" required="required" value="" type="password">
+                    </div>
+                </div>
+                <h4>I miei dati</h4>
+                <div class="input-grouped">
+                    <div class="input-field">
+                        <label>Nome *</label>
+                        <input name="name" required="required" value="" type="text">
+                    </div>
+                    <div class="input-field">
+                        <label>Cognome *</label>
+                        <input name="surname" required="required" value="" type="text">
+                    </div>
+                </div>
+                <div class="input-grouped">
+                    <div class="input-field">
+                        <label>Data di nascita *</label>
+                        <input name="birth" required="required" value="" type="date">
+                    </div>
+                    <div class="input-field">
+                        <label>Luogo di nascita</label>
+                        <input name="birth-place" value="" type="text">
+                    </div>
+                </div>
+                <h4 class="margin-bottom">Newsletter</h4>                  
                 <label class="margin-bottom">
-                    <input type="checkbox" name="ricordami" value="ricordami"/>
-                    Ricordami
+                    <input type="checkbox" name="newsletter" value="newsletter"/>
+                    Sì, desidero rimanere aggiornato sulle ultime news dei miei 
+                    eventi preferiti. Presale, promozioni, nuovi show e tanto altro! 
+                    (facoltativo)
                 </label>
-                <input class="button-submit margin-bottom-double" value="Accedi" name="submit_btn" type="submit">
+                <h4 class="margin-bottom">Informative utente</h4>
+                <p class="margin-bottom">Ho preso visione e accetto
+                    <a href="#">Informativa Privacy</a> *
+                </p>
+                <div class="input-grouped margin-bottom-double">
+                    <label><input required="required" type="radio" name="privacy" value="agree_privacy"/>
+                        Acconsento
+                    </label>
+                    <label><input required="required" type="radio" name="privacy" value="disagree_privacy"/>
+                        Non acconsento
+                    </label>
+                </div>
+                <p class="margin-bottom">Ho preso visione e accetto i
+                    <a href="#">Termini e condizioni di servizio</a> *
+                </p>
+                <div class="input-grouped margin-bottom-double">
+                    <label><input required="required" type="radio" name="terms" value="agree_terms"/>
+                        Acconsento
+                    </label>
+                    <label><input required="required" type="radio" name="terms" value="disagree_terms"/>
+                        Non acconsento
+                    </label>
+                </div>
+                <input class="button-submit margin-bottom-double" value="Accetta e continua" name="submit_btn" type="submit">
             </div>
         </form>
     </section>
@@ -62,7 +140,7 @@
     <footer>
         <div id="footer">
             <div id="promo">
-                <a href="/index.html" class="logo">
+                <a href="/index.php" class="logo">
                     <img src="./icons/logo.png">
                 </a>
                 <p>Seguiteci</p>

@@ -4,6 +4,8 @@
             exit;
         }
 
+        session_start();
+
         $conn = mysqli_connect("localhost", "root", "", "ticketmaster") or die(mysqli_connect_error());
         $query = "SELECT * FROM Artista WHERE ID = " .$_GET['id'] . " LIMIT 1";
         $result = mysqli_query($conn, $query) or die(mysqli_error($conn));
@@ -30,6 +32,15 @@
         }
 
         //print_r($scalette);
+
+        if(isset($_SESSION['email'])) {
+            $email = mysqli_real_escape_string($conn, $_SESSION['email']);
+            
+            $query3 = "SELECT * FROM Utente WHERE Mail = '".$email."'";
+
+            $result = mysqli_query($conn, $query3) or die(mysqli_error($conn));
+            $credenziali = mysqli_fetch_assoc($result);
+        }
 
         mysqli_free_result($result);
         mysqli_close($conn);
@@ -106,7 +117,26 @@
                 <input type="text" placeholder="Artista, Evento o Località"></input>
                 <div id="sbutton"><img id="search" src="./icons/search.png"></img></div>
             </div>
-            <a id="login" href="./login.php"><img id="person" src="./icons/person.png"></img><p>Accedi/Registrati</p></a>
+            <a id="login" <?php 
+                    if(isset($credenziali)){
+                        echo "href='./profile.php'";
+                    } else {
+                        echo "href='./login.php'";
+                    }
+                ?>><img id="person" src="./icons/person.png">
+                <p><?php 
+                    if(isset($credenziali)){
+                        $nome = $credenziali['Nome'];
+                        if(strlen($nome) > 14){
+                            echo substr($nome, 0, 14) . "..";
+                        } else {
+                            echo $nome;
+                        }
+                    } else {
+                        echo "Accedi/Registrati";
+                    }
+                ?></p>
+            </a>
         </div>
 
         <div id="modal-nav-desktop" class="hidden">

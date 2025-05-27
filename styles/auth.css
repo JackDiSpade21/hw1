@@ -193,6 +193,11 @@ input[type="checkbox"]{
     border-color: rgba(0, 0, 0, 0);
 }
 
+.error{
+    color: red;
+    margin: 0 0 5px 0;
+}
+
 .italic {
     font-style: italic;
 }

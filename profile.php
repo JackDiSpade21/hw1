@@ -1,6 +1,24 @@
+<?php
+    session_start();
+    if (!isset($_SESSION['email'])) {
+        header("Location: ./index.php");
+        exit();
+    }
+
+    $conn = mysqli_connect("localhost", "root", "", "ticketmaster") or die(mysqli_connect_error());
+    $email = mysqli_real_escape_string($conn, $_SESSION['email']);
+    
+    $query = "SELECT * FROM Utente WHERE Mail = '".$email."'";
+
+    $res = mysqli_query($conn, $query) or die(mysqli_error($conn));
+    $utente = mysqli_fetch_assoc($res);
+
+    mysqli_free_result($res);
+    mysqli_close($conn);
+?>
 <html>
 <head>
-    <title>Ticketmaster | Il mio profilo</title>
+    <title>Il mio profilo | Ticketmaster</title>
     <link rel="icon" type="image/x-icon" href="./favicon.ico">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="UTF-8">
@@ -29,7 +47,7 @@
     </header>
     <nav class="nav-auth">
         <div id="left-navbar">
-            <a href="./index.html" class="logo">
+            <a href="./index.php" class="logo">
                 <img src="./icons/logo.png">
             </a>
         </div>
@@ -38,7 +56,7 @@
     <section id="mobile-menu-nav" class="hidden">
         <div id="menutop">
             <div class="menu-item">
-                <a href="./index.html" class="logo">
+                <a href="./index.php" class="logo">
                     <img src="./icons/logo.png">
                 </a>
                 <div id="close-button"><img src="./icons/cross.png"></div>
@@ -97,7 +115,9 @@
             </div>
             <div id="hero-des">
                 <p>Area Personale di</p>
-                <h1>Nome Cognome</h1>
+                <h1><?php 
+                    echo $utente['Nome'] . " " . $utente['Cognome'];
+                ?></h1>
             </div>
         </div>       
     </section>
@@ -114,7 +134,7 @@
     <section id="main">
         <div id="event-container">
             <div class="width-limiter">
-                <div id="my-tickets" class="">
+                <div id="my-tickets" class="hidden">
                     <div class="section-title">
                         <p></p>
                         <h2>I tuoi biglietti</h2>
@@ -202,37 +222,43 @@
                     <div class="input-grouped margin-bottom-double">
                     <div class="input-field">
                         <h2>Nome</h3>
-                        <p>Mario</p>
+                        <p><?php echo $utente['Nome'] ?></p>
                     </div>
                     <div class="input-field">
                         <h2>Cognome</h3>
-                        <p>Rossi</p>
+                        <p><?php echo $utente['Cognome'] ?></p>
                     </div>
                     </div>
 
                     <div class="input-grouped margin-bottom-double">
                     <div class="input-field">
                         <h2>Email</h3>
-                        <p>MarioRossi@gmail.com</p>
+                        <p><?php echo $utente['Mail'] ?></p>
                     </div>
                     <div class="input-field">
                         <h2>Telefono</h3>
-                        <p>+39 123 123 1234</p>
+                        <p><?php echo $utente['Tel'] ?></p>
                     </div>
                     </div>
 
                     <div class="input-grouped margin-bottom-double">
                     <div class="input-field">
                         <h2>Data di nascita</h3>
-                        <p>21/12/98</p>
+                        <p><?php echo $utente['Nascita'] ?></p>
                     </div>
                     <div class="input-field">
                         <h2>Luogo di nascita</h3>
-                        <p>Non indicato</p>
+                        <p><?php
+                            if($utente['Luogo'] == 0){
+                                echo "Non fornito";
+                            } else {
+                                echo $utente['Luogo'];
+                            }
+                        ?></p>
                     </div>
                     </div>
 
-                    <input class="button-submit margin-bottom" value="Logout" name="logout" type="submit">
+                    <a class="button-submit margin-bottom" href="./logout.php">Logout</a>
                 
                 </div>
 
@@ -245,7 +271,7 @@
     <footer>
         <div id="footer">
             <div id="promo">
-                <a href="./index.html" class="logo">
+                <a href="./index.php" class="logo">
                     <img src="./icons/logo.png">
                 </a>
                 <p>Seguiteci</p>

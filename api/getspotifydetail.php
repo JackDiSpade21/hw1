@@ -61,7 +61,10 @@
     //exit();
 
     $artistId = $artist_json['artists']['items'][0]['id'];
-    $artistImg = $artist_json['artists']['items'][0]['images'][0]['url'];
+    $artistImg = null;
+    if (count($artist_json['artists']['items'][0]['images']) > 0) {
+        $artistImg = $artist_json['artists']['items'][0]['images'][0]['url'];
+    }
 
     //Step 4
     $curl = curl_init();

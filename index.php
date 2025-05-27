@@ -1,3 +1,19 @@
+<?php
+    session_start();
+
+    if(isset($_SESSION['email'])) {
+        $conn = mysqli_connect("localhost", "root", "", "ticketmaster") or die(mysqli_connect_error());
+        $email = mysqli_real_escape_string($conn, $_SESSION['email']);
+        
+        $query = "SELECT * FROM Utente WHERE Mail = '".$email."'";
+
+        $res = mysqli_query($conn, $query) or die(mysqli_error($conn));
+        $row = mysqli_fetch_assoc($res);
+
+        mysqli_free_result($res);
+        mysqli_close($conn);
+    }
+?>
 <html>
 <head>
     <title>Ticketmaster | Biglietti Ufficiali per Concerti, Festival, Arte e Teatro</title>
@@ -54,7 +70,26 @@
                 <input type="text" placeholder="Artista, Evento o Località"></input>
                 <div id="sbutton"><img id="search" src="./icons/search.png"></img></div>
             </div>
-            <a id="login" href="./login.html"><img id="person" src="./icons/person.png"><p>Accedi/Registrati</p></a>
+            <a id="login" <?php 
+                    if(isset($row)){
+                        echo "href='./profile.php'";
+                    } else {
+                        echo "href='./login.php'";
+                    }
+                ?>><img id="person" src="./icons/person.png">
+                <p><?php 
+                    if(isset($row)){
+                        $nome = $row['Nome'];
+                        if(strlen($nome) > 14){
+                            echo substr($nome, 0, 14) . "..";
+                        } else {
+                            echo $nome;
+                        }
+                    } else {
+                        echo "Accedi/Registrati";
+                    }
+                ?></p>
+            </a>
         </div>
 
         <div id="modal-nav-desktop" class="hidden">
@@ -106,7 +141,7 @@
     <section id="mobile-menu-nav" class="hidden">
         <div id="menutop">
             <div class="menu-item">
-                <a href="./index.html" class="logo">
+                <a href="./index.php" class="logo">
                     <img src="./icons/logo.png">
                 </a>
                 <div id="close-button"><img src="./icons/cross.png"></div>
@@ -232,7 +267,7 @@
     <footer>
         <div id="footer">
             <div id="promo">
-                <a href="./index.html" class="logo">
+                <a href="./index.php" class="logo">
                     <img src="./icons/logo.png">
                 </a>
                 <p>Seguiteci</p>

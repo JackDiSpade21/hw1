@@ -10,6 +10,11 @@
         $firstLogin = true;
     }
 
+    $buy = 0;
+    if(isset($_GET['buy']) && $_GET['buy'] > 0) {
+        $buy = $_GET['buy'];
+    }
+
     $conn = mysqli_connect("localhost", "root", "", "ticketmaster") or die(mysqli_connect_error());
     $email = mysqli_real_escape_string($conn, $_SESSION['email']);
     
@@ -139,7 +144,7 @@
     <section id="main">
         <div id="event-container">
             <div class="width-limiter">
-                <div id="my-tickets" class="hidden">
+                <div id="my-tickets" class="">
                     <div class="section-title">
                         <p></p>
                         <h2>I tuoi biglietti</h2>
@@ -221,8 +226,26 @@
                 <div id="my-data" class="">
                     <h4 
                         <?php if($firstLogin) echo 'class="welcome"'; else echo 'class="hidden"'; ?>>
-                    Benvenuto su TicketMaster!<br>Questa è la area personale, potrai
-                    vedere i tuoi biglietti acquistati quì.<br>Torna alla home per vedere gli eventi!</h4>
+                    
+                        Benvenuto su TicketMaster!<br>Questa è la area personale, potrai
+                        vedere i tuoi biglietti acquistati quì.<br>Torna alla home per vedere gli eventi!
+                
+                    </h4>
+
+                    <h4 
+                        <?php if($buy == 1) echo 'class="welcome"'; else echo 'class="hidden"'; ?>>
+                    
+                        L'acquisto è andato a buon fine!<br>Visualizza i tuoi biglietti
+                        nella sezione "BIGLIETTI"!.
+                
+                    </h4>
+
+                    <h4 
+                        <?php if($buy == 2) echo 'class="error"'; else echo 'class="hidden"'; ?>>
+                    
+                        Si è verificato un errore nell'acquisto.<br>Riprova più tardi.
+                
+                    </h4>
 
                     <div class="section-title margin-bottom-double">
                         <p></p>

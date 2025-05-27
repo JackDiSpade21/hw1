@@ -1,5 +1,6 @@
-DROP TABLE IF EXISTS Concerto;
-DROP TABLE IF EXISTS Biglietto;
+DROP TABLE IF EXISTS concerto;
+DROP TABLE IF EXISTS biglietto;
+DROP TABLE IF EXISTS Ricevuta;
 DROP TABLE IF EXISTS Scaletta;
 DROP TABLE IF EXISTS Canzone;
 DROP TABLE IF EXISTS Posto;
@@ -75,17 +76,32 @@ CREATE TABLE IF NOT EXISTS Scaletta(
 	FOREIGN KEY(Artista) REFERENCES Artista(ID)
 );
 
+CREATE TABLE if NOT EXISTS Ricevuta(
+	ID INT,
+	Totale FLOAT,
+	Quantita INT,
+	Acquisto DATE,
+	Evento INT,
+	Utente VARCHAR(40),
+	Informazioni VARCHAR(400),
+
+	PRIMARY KEY(ID),
+	FOREIGN KEY(Evento) REFERENCES Evento(ID),
+	FOREIGN KEY(Utente) REFERENCES Utente(Mail)
+);
+
 CREATE TABLE IF NOT EXISTS Biglietto(
 	ID INT,
+	Codice VARCHAR(40),
 	Stato INT,
 	Tipo INT,
 	Evento INT,
-	Utente VARCHAR(40),
+	Ricevuta INT,
 	
 	PRIMARY KEY(ID),
 	FOREIGN KEY(Tipo) REFERENCES Posto(ID),
 	FOREIGN KEY(Evento) REFERENCES Evento(ID),
-	FOREIGN KEY(Utente) REFERENCES Utente(Mail)
+	FOREIGN KEY(Ricevuta) REFERENCES Ricevuta(ID)
 );
 
 CREATE TABLE IF NOT EXISTS Concerto(
@@ -256,3 +272,72 @@ INSERT INTO Evento (ID, Nome, Luogo, DataEvento, Ora, Nazionale, Artista) VALUES
 (63, 'Psychedelic Trance Gathering', 'Goa - Hilltop Club', '2025-11-08', '23:30:00', FALSE, 3),
 (64, 'Jazz Fusion Night', 'Toronto - Massey Hall', '2025-07-19', '19:00:00', FALSE, 4),
 (65, 'Alternative Indie Dreamscape', 'Berlin - Columbiahalle', '2025-09-20', '20:00:00', FALSE, 5);
+
+INSERT INTO Posto (ID, Nome, Costo, Des, Capacita, Evento) VALUES
+(1, 'Biglietto Regular', 40.50, 'Poltrone normali.', 13, 1),
+(2, 'Tribune', 35.00, 'Visibilità normale.', 17, 2),
+(3, 'Biglietto', 50.00, 'Posti in piedi', 12, 3),
+(4, 'Biglietto Regular', 45.50, 'Poltrone normali.', 18, 4),
+(5, 'Tribune', 38.00, 'Visibilità normale.', 15, 5),
+(6, 'Biglietto', 42.50, 'Posti in piedi', 19, 6),
+(7, 'Biglietto Regular', 37.00, 'Poltrone normali.', 11, 7),
+(8, 'Tribune', 55.50, 'Visibilità normale.', 16, 8),
+(9, 'Biglietto', 41.00, 'Posti in piedi', 14, 9),
+(10, 'Biglietto Regular', 44.50, 'Poltrone normali.', 20, 10),
+(11, 'Tribune', 39.00, 'Visibilità normale.', 10, 11),
+(12, 'Biglietto', 46.50, 'Posti in piedi', 17, 12),
+(13, 'Biglietto Regular', 36.00, 'Poltrone normali.', 15, 13),
+(14, 'Tribune', 48.50, 'Visibilità normale.', 18, 14),
+(15, 'Biglietto', 43.00, 'Posti in piedi', 13, 15),
+(16, 'Biglietto Regular', 47.50, 'Poltrone normali.', 19, 16),
+(17, 'Tribune', 34.00, 'Visibilità normale.', 12, 17),
+(18, 'Biglietto', 49.50, 'Posti in piedi', 16, 18),
+(19, 'Biglietto Regular', 42.00, 'Poltrone normali.', 14, 19),
+(20, 'Tribune', 45.50, 'Visibilità normale.', 20, 20),
+(21, 'Biglietto', 38.00, 'Posti in piedi', 11, 21),
+(22, 'Biglietto Regular', 50.50, 'Poltrone normali.', 18, 22),
+(23, 'Tribune', 41.00, 'Visibilità normale.', 13, 23),
+(24, 'Biglietto', 44.50, 'Posti in piedi', 17, 24),
+(25, 'Biglietto Regular', 39.00, 'Poltrone normali.', 15, 25),
+(26, 'Tribune', 46.50, 'Visibilità normale.', 19, 26),
+(27, 'Biglietto', 36.00, 'Posti in piedi', 12, 27),
+(29, 'Tribune', 43.00, 'Visibilità normale.', 14, 29),
+(30, 'Biglietto', 47.50, 'Posti in piedi', 20, 30),
+(31, 'Biglietto Regular', 34.00, 'Poltrone normali.', 13, 31),
+(32, 'Tribune', 49.50, 'Visibilità normale.', 18, 32),
+(33, 'Biglietto', 42.00, 'Posti in piedi', 16, 33),
+(34, 'Biglietto Regular', 45.50, 'Poltrone normali.', 11, 34),
+(35, 'Tribune', 38.00, 'Visibilità normale.', 19, 35),
+(36, 'Biglietto', 50.50, 'Posti in piedi', 15, 36),
+(37, 'Biglietto Regular', 41.00, 'Poltrone normali.', 12, 37),
+(38, 'Tribune', 44.50, 'Visibilità normale.', 20, 38),
+(39, 'Biglietto', 39.00, 'Posti in piedi', 18, 39),
+(40, 'Biglietto Regular', 46.50, 'Poltrone normali.', 17, 40),
+(41, 'Tribune', 36.00, 'Visibilità normale.', 14, 41),
+(42, 'Biglietto', 48.50, 'Posti in piedi', 19, 42),
+(43, 'Biglietto Regular', 43.00, 'Poltrone normali.', 13, 43),
+(44, 'Tribune', 47.50, 'Visibilità normale.', 16, 44),
+(45, 'Biglietto', 34.00, 'Posti in piedi', 18, 45),
+(46, 'Biglietto Regular', 49.50, 'Poltrone normali.', 15, 46),
+(47, 'Tribune', 42.00, 'Visibilità normale.', 20, 47),
+(48, 'Biglietto', 45.50, 'Posti in piedi', 12, 48),
+(49, 'Biglietto Regular', 38.00, 'Poltrone normali.', 17, 49),
+(50, 'Tribune', 50.50, 'Visibilità normale.', 19, 50),
+(51, 'Biglietto', 41.00, 'Posti in piedi', 14, 51),
+(52, 'Biglietto Regular', 44.50, 'Poltrone normali.', 18, 52),
+(53, 'Tribune', 39.00, 'Visibilità normale.', 13, 53),
+(54, 'Biglietto', 46.50, 'Posti in piedi', 20, 54),
+(55, 'Biglietto Regular', 36.00, 'Poltrone normali.', 15, 55),
+(56, 'Tribune', 48.50, 'Visibilità normale.', 17, 56),
+(57, 'Biglietto', 43.00, 'Posti in piedi', 19, 57),
+(58, 'Biglietto Regular', 47.50, 'Poltrone normali.', 12, 58),
+(59, 'Tribune', 34.00, 'Visibilità normale.', 16, 59),
+(60, 'Biglietto', 49.50, 'Posti in piedi', 20, 60),
+(61, 'Biglietto Regular', 42.00, 'Poltrone normali.', 13, 61),
+(62, 'Tribune', 45.50, 'Visibilità normale.', 18, 62),
+(63, 'Biglietto', 38.00, 'Posti in piedi', 15, 63),
+(64, 'Biglietto Regular', 50.50, 'Poltrone normali.', 19, 64),
+(65, 'Tribune', 41.00, 'Visibilità normale.', 14, 65),
+(28, 'Biglietto VIP', 248.50, 'Poltrone migliori.', 3, 28),
+(66, 'Biglietto Regular', 148.50, 'Poltrone normali.', 17, 28),
+(67, 'Biglietto Economy', 64.50, 'Visibilità limitata.', 4, 28);

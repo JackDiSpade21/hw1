@@ -1,6 +1,42 @@
+<?php
+    session_start();
+    if (!isset($_SESSION['email'])) {
+        header("Location: ./login.php");
+        exit();
+    }
+
+    $firstLogin = false;
+    if(!isset($_GET['id'])) {
+        header("Location: ./index.php");
+        exit();
+    }
+
+    $conn = mysqli_connect("localhost", "root", "", "ticketmaster") or die(mysqli_connect_error());
+
+    
+
+    $query = "SELECT artista.Nome, artista.Img FROM evento
+            JOIN artista ON evento.Artista = artista.ID
+            WHERE evento.ID =  " .$_GET['id'];
+    $result = mysqli_query($conn, $query) or die(mysqli_error($conn));
+    $artista = mysqli_fetch_assoc($result);
+
+    $query = "SELECT * FROM Evento WHERE ID = " .$_GET['id'] ;
+    $result = mysqli_query($conn, $query) or die(mysqli_error($conn));
+    $evento = mysqli_fetch_assoc($result);
+
+    //trova numero di biglietti rimasti
+    $query = "SELECT SUM(Capacita) AS Rimasti FROM posto
+                WHERE evento = ".$evento['ID'];
+    $result = mysqli_query($conn, $query) or die(mysqli_error($conn));
+    $postiRimasti = mysqli_fetch_assoc($result);
+
+    mysqli_free_result($result);
+    mysqli_close($conn);
+?>
 <html>
 <head>
-    <title>Accedi | Ticketmaster</title>
+    <title>Acquista biglietti per <?php echo $artista['Nome']?> | Ticketmaster</title>
     <link rel="icon" type="image/x-icon" href="./favicon.ico">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="UTF-8">
@@ -25,7 +61,7 @@
     </header>
     <nav class="nav-auth">
         <div id="left-navbar">
-            <a href="./index.html" class="logo">
+            <a href="./index.php" class="logo">
                 <img src="./icons/logo.png">
             </a>
         </div>
@@ -35,45 +71,44 @@
     <div class="width-limiter">
         <form>
             <div id="concert-recap">
-                <img src="./cards/BLACKPINK_Medium.webp">
+                <img <?php echo 'src="' . $artista['Img'] . '"'; ?> class="event-image">
                 <div>
-                    <h3 class="margin-bottom event-title">BLACKPINK WORLD TOUR IN MILAN</h3>
-                    <label class="margin-bottom">mer 06 ago 2025 - h 20:00 | Ippodromo SNAI La Maura, Milano</label>
+                    <h3 class="margin-bottom event-title"><?php echo $evento['Nome']?></h3>
+                    <!-- mer 06 ago 2025 - h 20:00 | Ippodromo SNAI La Maura, Milano -->
+                    <label class="margin-bottom"><?php echo $evento['DataEvento'].' - h '.
+                    substr($evento['Ora'], 0, -3).' | '.$evento['Luogo'] ?></label>
                 </div>
             </div>
             
             <div id="step1" class="input-container">
 
-                <div id="ticketdisclaimer">Si esercita un limite di 5 biglietti per singolo ordine. Biglietti rimasti: 130.</div>
+                <div id="ticketdisclaimer">Si esercita un limite di 5 biglietti per singolo ordine.
+                    Biglietti rimasti: <?php echo $postiRimasti['Rimasti'] ?>.</div>
                 <b class="section-title">tipologia di biglietto</b>
                 
-                <div class="divider-buy"></div>
-                <div class="input-grouped input-go-column">
-                    <h3 class="ticket-type">Biglietto VIP / Poltrone migliori.</h3>
-                    <div class="quantity-field">
-                        <input type="number" id="quantity" name="quantity" min="0" max="5" value="0">
-                        <p class="tick-quantity" for="quantity">205.00 €</p>
-                    </div>
-                </div>                 
-                
-                <div class="divider-buy"></div>
-                <div class="input-grouped input-go-column">
-                    <h3 class="ticket-type">Biglietto Regular / Poltrone normali.</h3>
-                    <div class="quantity-field">
-                        <p class="oos">esaurito</p>
-                        <p class="tick-quantity" for="quantity">135.00 €</p>
-                    </div>
-                </div>  
+                <?php
+                    $conn = mysqli_connect("localhost", "root", "", "ticketmaster") or die(mysqli_connect_error());
+                    $query = "SELECT * FROM Posto WHERE Evento = " . intval($evento['ID']);
+                    $result = mysqli_query($conn, $query) or die(mysqli_error($conn));
 
-                <div class="divider-buy"></div>
-                <div class="input-grouped input-go-column">
-                    <h3 class="ticket-type">Biglietto Economy / Visibilità limitata.</h3>
-                    <div class="quantity-field">
-                        <input type="number" id="quantity" name="quantity" min="0" max="5" value="0">
-                        <p class="tick-quantity" for="quantity">55.00 €</p>
-                    </div>
-                </div>  
-                <div class="divider-buy"></div>
+                    while ($posto = mysqli_fetch_assoc($result)) {
+                        echo '<div class="divider-buy"></div>';
+                        echo '<div class="input-grouped input-go-column">';
+                        echo '<h3 class="ticket-type">' . $posto['Nome'] . ' / ' . $posto['Des'] . '</h3>';
+                        echo '<div class="quantity-field">';
+                        if ($posto['Capacita'] > 0) {
+                            echo '<input type="number" id="quantity_' . $posto['ID'] . '" name="quantity_' . $posto['ID'] . '" min="0" max="' . min(5, $posto['Capacita']) . '" value="0">';
+                        } else {
+                            echo '<p class="oos">esaurito</p>';
+                        }
+                        echo '<p class="tick-quantity" for="quantity_' . $posto['ID'] . '">' . number_format($posto['Costo'], 2, ',', '.') . ' €</p>';
+                        echo '</div>';
+                        echo '</div>';
+                    }
+                    echo '<div class="divider-buy"></div>';
+                    mysqli_free_result($result);
+                    mysqli_close($conn);
+                ?>
 
                 <b class="section-title">Modalità di consegna</b>
                 <div class="divider-buy"></div>
@@ -81,17 +116,17 @@
                 <div class="margin-bottom-double">
                     
                     <label>
-                        <input required="required" type="radio" name="print" value="paper"/>
+                        <input required="required" type="radio" name="print" value="pay"/>
                         <div class="ticket-mode">
                             <p>Spedizione tramite corriere.</p>
-                            <p class="print-price">10.00 €</p>
+                            <p class="print-price">10,00 €</p>
                         </div>
                     </label>
 
                     <div class="divider-buy"></div>
                     
                     <label>
-                        <input required="required" type="radio" name="print" value="mail" checked/>
+                        <input required="required" type="radio" name="print" value="free" checked/>
                         <div class="ticket-mode">
                             <p>Stampa a casa, ricevi via mail.</p>
                             <p class="print-price">Gratis</p>
@@ -99,11 +134,6 @@
                     </label>
 
                     <div class="divider-buy"></div>
-                </div>
-
-                <div class="submit-wrapper">
-                    <p class="error">Seleziona almeno un biglietto.</p>
-                    <input class="button-proceed margin-bottom-double" value="Prossimo passaggio" name="submit_btn" type="submit">
                 </div>
             </div>
 
@@ -118,7 +148,7 @@
                         <input name="email" required="required" value="" type="email">
                     </div>
                     <div class="input-field">
-                        <label>Cognome *</label>
+                        <label for="surname">Cognome *</label>
                         <input name="confirm-email" required="required" value="" type="email">
                     </div>
                 </div>
@@ -181,7 +211,7 @@
     <footer>
         <div id="footer">
             <div id="promo">
-                <a href="/index.html" class="logo">
+                <a href="/index.php" class="logo">
                     <img src="./icons/logo.png">
                 </a>
                 <p>Seguiteci</p>

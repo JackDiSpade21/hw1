@@ -27,11 +27,12 @@
         $birthPlace = mysqli_real_escape_string($conn, $_POST['birthPlace']);
 
 
-        if($birthPlace !== "")
+        if($birthPlace !== ""){
             $birthPlace = mysqli_real_escape_string($conn, $_POST['birthPlace']);
+            $birthPlace = "'$birthPlace'";
+        }
         else{
             $birthPlace = "NULL";
-            echo "VUOTOOOOOO";
         }
 
         $newsletter = isset($_POST['newsletter']) ? 1 : 0;

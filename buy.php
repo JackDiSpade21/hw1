@@ -5,15 +5,12 @@
         exit();
     }
 
-    $firstLogin = false;
     if(!isset($_GET['id'])) {
         header("Location: ./index.php");
         exit();
     }
 
     $conn = mysqli_connect("localhost", "root", "", "ticketmaster") or die(mysqli_connect_error());
-
-    
 
     $query = "SELECT artista.Nome, artista.Img FROM evento
             JOIN artista ON evento.Artista = artista.ID
@@ -25,11 +22,14 @@
     $result = mysqli_query($conn, $query) or die(mysqli_error($conn));
     $evento = mysqli_fetch_assoc($result);
 
-    //trova numero di biglietti rimasti
     $query = "SELECT SUM(Capacita) AS Rimasti FROM posto
                 WHERE evento = ".$evento['ID'];
     $result = mysqli_query($conn, $query) or die(mysqli_error($conn));
     $postiRimasti = mysqli_fetch_assoc($result);
+
+    $query = "Select * FROM Utente WHERE Mail = '" . mysqli_real_escape_string($conn, $_SESSION['email']) . "'";
+    $result = mysqli_query($conn, $query) or die(mysqli_error($conn));
+    $utente = mysqli_fetch_assoc($result);
 
     mysqli_free_result($result);
     mysqli_close($conn);
@@ -42,6 +42,7 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="./styles/buy.css">
     <script src="./scripts/footer.js" defer></script>
+    <script src="./scripts/buy.js" defer></script>
     <link rel="stylesheet" type="text/css" href="./styles/nav.css">
     <link rel="stylesheet" type="text/css" href="./styles/header.css">
     <link rel="stylesheet" type="text/css" href="./styles/footer.css">
@@ -69,7 +70,7 @@
 
     <section id="main">
     <div class="width-limiter">
-        <form>
+        <form name="buy" method="post">
             <div id="concert-recap">
                 <img <?php echo 'src="' . $artista['Img'] . '"'; ?> class="event-image">
                 <div>
@@ -77,6 +78,7 @@
                     <!-- mer 06 ago 2025 - h 20:00 | Ippodromo SNAI La Maura, Milano -->
                     <label class="margin-bottom"><?php echo $evento['DataEvento'].' - h '.
                     substr($evento['Ora'], 0, -3).' | '.$evento['Luogo'] ?></label>
+                    <label class="margin-bottom">Artista: <?php echo $artista['Nome'] ?></label>
                 </div>
             </div>
             
@@ -118,7 +120,7 @@
                     <label>
                         <input required="required" type="radio" name="print" value="pay"/>
                         <div class="ticket-mode">
-                            <p>Spedizione tramite corriere.</p>
+                            <p>Spedizione tramite corriere espresso.</p>
                             <p class="print-price">10,00 €</p>
                         </div>
                     </label>
@@ -145,29 +147,29 @@
                 <div class="input-grouped margin-bottom">
                     <div class="input-field">
                         <label>Nome *</label>
-                        <input name="email" required="required" value="" type="email">
+                        <input name="name" required="required" value="" type="text">
                     </div>
                     <div class="input-field">
                         <label for="surname">Cognome *</label>
-                        <input name="confirm-email" required="required" value="" type="email">
+                        <input name="surname" required="required" value="" type="text">
                     </div>
                 </div>
 
                 <div class="input-grouped margin-bottom">
                     <div class="input-field">
-                        <label>Indirizzo completo *</label>
-                        <input name="email" required="required" value="" type="email">
+                        <label for="address">Indirizzo completo *</label>
+                        <input name="address" required="required" value="" type="text">
                     </div>
                     <div class="input-field">
-                        <label>CAP *</label>
-                        <input name="confirm-email" required="required" value="" type="email">
+                        <label for="cap">CAP *</label>
+                        <input name="cap" required="required" value="" type="text">
                     </div>
                 </div>
 
                 <div class="input-grouped margin-bottom">
                     <div class="input-field">
-                        <label>Provincia *</label>
-                        <input name="email" required="required" value="" type="email">
+                        <label for="city">Provincia *</label>
+                        <input name="city" required="required" value="" type="text">
                     </div>
                 </div>
 
@@ -175,30 +177,31 @@
                 <div class="divider-buy margin-bottom-double"></div>
                 <div class="input-grouped margin-bottom">
                     <div class="input-field">
-                        <label>Numero di carta *</label>
-                        <input name="email" required="required" value="" type="email">
+                        <label for="card">Numero di carta *</label>
+                        <input name="card" required="required" value="" type="text">
                     </div>
                     <div class="input-field">
                         <label>CVC *</label>
-                        <input name="confirm-email" required="required" value="" type="email">
+                        <input name="cvc" required="required" value="" type="text">
                     </div>
                 </div>
 
                 <div class="input-grouped">
                     <div class="input-field">
                         <label>Data di scadenza *</label>
-                        <input name="email" required="required" value="" type="email">
+                        <input name="expiry" required="required" value="" type="text" >
                     </div>
                 </div>
 
-                <b class="section-title">Totale</b>
+                <b class="section-title">Finalizzazione</b>
                 <div class="divider-buy margin-bottom"></div>
                 <h2 class="margin-bottom">450.00 €</h2>
+                <h3 class="margin-bottom">I biglietti saranno connessi al profilo di <strong><?php echo $utente['Nome']." ".$utente['Cognome']?></strong>.</h3>
                 <label>Sono incluse le tasse. Verrà inviata una ricevuta via mail.</label>
                 <label class="margin-bottom-double">I biglietti saranno visibili sul tuo profilo.</label>
 
                 <div class="submit-wrapper">
-                    <p class="error">Ricontrolla i dati inseriti.</p>
+                    <p class="error hidden">Ricontrolla i dati inseriti.</p>
                     <input class="button-proceed margin-bottom-double" value="Completa acquisto" name="submit_btn" type="submit">
                 </div>
             </div>

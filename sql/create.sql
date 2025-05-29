@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS utente(
 	Mail VARCHAR(40),
 	Nome VARCHAR(40) NOT NULL,
 	Cognome VARCHAR(40) NOT NULL,
-	Psw VARCHAR(40) NOT NULL,
+	Psw VARCHAR(400) NOT NULL,
 	Tel VARCHAR(40) NOT NULL,
 	Nascita DATE NOT NULL,
 	Luogo VARCHAR(40),
@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS utente(
 );
 
 INSERT INTO utente VALUES
-('demo@web.it', 'demo', 'demo', 'demo', '3333333333', '2025-11-15', NULL, FALSE);
+('demo@web.it', 'demo', 'demo', '$2y$10$TOCXZkNGwI0.mSeRYjMj1OoCjYf.5MjezKBvsDYw4w7vASZPV.EZq', '+393323333333', '2025-11-15', NULL, FALSE);
 
 CREATE TABLE IF NOT EXISTS Evento(
 	ID INT,

@@ -1,33 +1,41 @@
 <?php
+    require_once './dbconfig.php';
     session_start();
     if (isset($_SESSION['email'])) {
         header("Location: ./index.php");
         exit();
     }
 
-    $errore = false;
-
-    if(isset($_POST['email']) && isset($_POST['password'])) {
-        $conn = mysqli_connect("localhost", "root", "", "ticketmaster") or die(mysqli_connect_error());
+    if(!empty($_POST["email"]) && !empty($_POST["password"])) {
+        $conn = mysqli_connect($dbconfig['host'], $dbconfig['user'], $dbconfig['password'], $dbconfig['name']) or die(mysqli_connect_error());
         $email = mysqli_real_escape_string($conn, $_POST['email']);
         $password = mysqli_real_escape_string($conn, $_POST['password']);
-        
-        $query = "SELECT * FROM Utente WHERE Mail = '".$email."' AND Psw = '".$password."'";
+
+        $query = "SELECT * FROM Utente WHERE Mail = '".$email."'";
 
         $res = mysqli_query($conn, $query) or die(mysqli_error($conn));
         if(mysqli_num_rows($res) > 0)
         {
-            $_SESSION["email"] = $_POST["email"];
-            header("Location: ./index.php");
-            exit;
+            $entry = mysqli_fetch_assoc($res);
+            if (password_verify($password, $entry['Psw'])) {
+                $_SESSION["email"] = $_POST["email"];
+                header("Location: ./index.php");
+                exit;
+            }
+            else
+            {
+                $errore = "Credenziali non corrette.";
+            }
         }
         else
         {
-            $errore = true;
+            $errore = "Utente sconosciuto.";
         }
 
         mysqli_free_result($res);
         mysqli_close($conn);
+    }else if (isset($_POST["email"]) || isset($_POST["password"])) {
+        $error = "Inserisci username e password.";
     }
 ?>
 
@@ -65,14 +73,13 @@
     </nav>
 
     <section id="main">
-        <h4 id="error" 
-            <?php 
-            if ($errore) { 
-                echo 'class="error"'; 
-            } else { 
-                echo 'class="error hidden"'; 
+        <?php
+            if (isset($errore)) {
+                echo '<h4 id="error" class="error">' . $errore . '</h4>';
+            } else {
+                echo '<h4 id="error" class="error hidden"></h4>';
             }
-            ?>>Credenziali non corrette o utente sconosciuto.</h4>
+        ?>
         <form name="login" method="post">
             <h2>Login</h2>
             <p class="margin-bottom">Non ancora registrato?&nbsp;
@@ -82,7 +89,7 @@
                 <div class="input-grouped">
                     <div class="input-field">
                         <label for="email">Email</label>
-                        <input id="email" name="email" required="required" value="" type="email">
+                        <input id="email" name="email" required="required" <?php if(isset($_POST["email"])){echo "value=".$_POST["email"];} ?> type="email">
                     </div>
                     <div class="input-field">
                         <label for="password" >Password&nbsp;

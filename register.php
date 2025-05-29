@@ -1,20 +1,29 @@
 <?php
+    require_once './dbconfig.php';
     session_start();
     if (isset($_SESSION['email'])) {
         header("Location: ./index.php");
         exit();
     }
 
-    $errore = false;
-    $exists = false;
+    $error = array();
 
-    if(isset($_POST['email']) && isset($_POST['confirmEmail']) && isset($_POST['password']) 
-    && isset($_POST['confirmPassword']) && isset($_POST['numberPrefix'])
-    && isset($_POST['number']) && isset($_POST['name']) && isset($_POST['surname']
-    ) && isset($_POST['birth']) && isset($_POST['privacy'])
-    && isset($_POST['terms']) && isset($_POST['birthPlace'])) {
+    if (
+        !empty($_POST['email']) &&
+        !empty($_POST['confirmEmail']) &&
+        !empty($_POST['password']) &&
+        !empty($_POST['confirmPassword']) &&
+        !empty($_POST['numberPrefix']) &&
+        !empty($_POST['number']) &&
+        !empty($_POST['name']) &&
+        !empty($_POST['surname']) &&
+        !empty($_POST['birth']) &&
+        !empty($_POST['privacy']) &&
+        !empty($_POST['terms']) &&
+        isset($_POST['birthPlace'])
+    ) {
+        $conn = mysqli_connect($dbconfig['host'], $dbconfig['user'], $dbconfig['password'], $dbconfig['name']) or die(mysqli_connect_error());
 
-        $conn = mysqli_connect("localhost", "root", "", "ticketmaster") or die(mysqli_connect_error());
         $email = mysqli_real_escape_string($conn, $_POST['email']);
         $confirmEmail = mysqli_real_escape_string($conn, $_POST['confirmEmail']);
         $password = mysqli_real_escape_string($conn, $_POST['password']);
@@ -25,79 +34,93 @@
         $surname = mysqli_real_escape_string($conn, $_POST['surname']);
         $birth = mysqli_real_escape_string($conn, $_POST['birth']);
         $birthPlace = mysqli_real_escape_string($conn, $_POST['birthPlace']);
-
-
-        if($birthPlace !== ""){
-            $birthPlace = mysqli_real_escape_string($conn, $_POST['birthPlace']);
-            $birthPlace = "'$birthPlace'";
-        }
-        else{
-            $birthPlace = "NULL";
-        }
-
         $newsletter = isset($_POST['newsletter']) ? 1 : 0;
 
-        if(strlen($password) < 8 || strlen($password) > 32) {
-            $errore = true;
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $error[] = "Email non valida";
+        } else {
+            $res = mysqli_query($conn, "SELECT Mail FROM Utente WHERE Mail = '$email'");
+            if (mysqli_num_rows($res) > 0) {
+                $error[] = "L'email inserita è già in uso.";
+            }
         }
 
-        if($_POST['privacy'] !== "agreePrivacy" || $_POST['terms'] !== "agreeTerms") {
-            $errore = true;
+        if ($email !== $confirmEmail) {
+            $error[] = "Le email non corrispondono";
         }
 
-        if(strlen($number) < 9) {
-            $errore = true;
+        if (strlen($password) < 8 || strlen($password) > 32) {
+            $error[] = "La password deve essere tra 8 e 32 caratteri";
+        } else if (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,32}$/', $password)) {
+            $error[] = "La password deve rispettare i requisiti indicati.";
         }
 
-        if(
+        if ($password !== $confirmPassword) {
+            $error[] = "Le password non corrispondono";
+        }
+
+        if ($_POST['privacy'] !== "agreePrivacy") {
+            $error[] = "Devi accettare l'informativa sulla privacy";
+        }
+        if ($_POST['terms'] !== "agreeTerms") {
+            $error[] = "Devi accettare i termini e le condizioni";
+        }
+
+        if (strlen($number) < 9) {
+            $error[] = "Numero di telefono non valido";
+        } elseif (!preg_match('/^[0-9]{9,20}$/', $number)) {
+            $error[] = "Il numero di telefono deve contenere solo cifre";
+        }
+
+        if (
             $numberPrefix !== "+39" &&
             $numberPrefix !== "+1" &&
             $numberPrefix !== "+44" &&
             $numberPrefix !== "+49" &&
             $numberPrefix !== "+33" &&
-            $numberPrefix !== "+34")
-        {
-            $errore = true;
+            $numberPrefix !== "+34"
+        ) {
+            $error[] = "Prefisso non valido";
         }
 
         $today = new DateTime();
         $birthDate = DateTime::createFromFormat('Y-m-d', $birth);
-        if($birthDate) {
+        if ($birthDate) {
             $age = $today->diff($birthDate)->y;
-            if($age < 18 || $age > 100) {
-                $errore = true;
+            if ($age < 18) {
+                $error[] = "L'età deve essere compresa tra 18 e 100 anni";
+            } else if ($age > 100) {
+                $error[] = "Data di nascita non valida";
             }
         } else {
-            $errore = true;
+            $error[] = "Data di nascita non valida";
         }
 
-        if ($email !== $confirmEmail || $password !== $confirmPassword) {
-            $errore = true;
-        } else if (!$errore) {
-            $queryCheckEmail = "SELECT * FROM Utente WHERE Mail = '$email'";
-            $resCheckEmail = mysqli_query($conn, $queryCheckEmail) or die(mysqli_error($conn));
-            if (mysqli_num_rows($resCheckEmail) > 0) {
-                $errore = true;
-                $exists = true;
+        if (count($error) == 0) {
+            if($birthPlace !== ""){
+                $birthPlace = "'$birthPlace'";
             } else {
-
-                $queryInsert = "INSERT INTO Utente (Mail, Psw, Tel, Nome, Cognome, Nascita, Luogo, Newsletter) 
-                VALUES ('$email', '$password', '$numberPrefix$number', '$name', '$surname', '$birth', $birthPlace, '$newsletter')";
-                  
-                if (mysqli_query($conn, $queryInsert)) {
-                    $_SESSION["email"] = $_POST["email"];
-                    mysqli_close($conn);
-                    mysqli_free_result($resCheckEmail);
-                    header("Location: ./profile.php?firstLogin=true");
-                    exit();
-                } else {
-                    $errore = true;
-                }
+                $birthPlace = "NULL";
             }
-            mysqli_free_result($resCheckEmail);
+
+            $password = password_hash($password, PASSWORD_BCRYPT);
+
+            $queryInsert = "INSERT INTO Utente (Mail, Psw, Tel, Nome, Cognome, Nascita, Luogo, Newsletter) 
+                VALUES ('$email', '$password', '$numberPrefix$number', '$name', '$surname', '$birth', $birthPlace, '$newsletter')";
+
+            if (mysqli_query($conn, $queryInsert)) {
+                $_SESSION["email"] = $_POST["email"];
+                mysqli_close($conn);
+                header("Location: ./profile.php?firstLogin=true");
+                exit();
+            } else {
+                $error[] = "Si è verificato un errore durante la registrazione. Riprova.";
+            }
         }
-        
+
         mysqli_close($conn);
+    } else if (isset($_POST['email'])) {
+        $error[] = "Riempi tutti i campi obbligatori";
     }
 ?>
 
@@ -136,22 +159,22 @@
     </nav>
 
     <section id="main">
+        <!-- Stampa errori -->
         <h4 id="error" 
             <?php 
-            if ($errore) { 
+            if (count($error) > 0) { 
                 echo 'class="error"'; 
             } else { 
                 echo 'class="error hidden"'; 
             }
             ?>>
             <?php
-                if($exists) {
-                    echo "L'email inserita è già in uso.";
-                } else {
-                    echo "Si è verificato un errore durante la registrazione. Riprova.";
+                foreach($error as $err) {
+                    echo $err . "<br>";
                 }
             ?>
         </h4>
+
         <form name="register" method="post">
             <h2>Sei un nuovo utente</h2>
             <p class="margin-bottom">Già registrato?&nbsp;
@@ -167,25 +190,25 @@
                     <label>Cellulare *</label>
                     <div>
                         <select name="numberPrefix" class="number-prefix">
-                            <option selected value="+39">IT +39</option>
-                            <option value="+1">US +1</option>
-                            <option value="+44">UK +44</option>
-                            <option value="+49">DE +49</option>
-                            <option value="+33">FR +33</option>
-                            <option value="+34">ES +34</option>
+                            <option value="+39" <?php if(isset($_POST['numberPrefix']) && $_POST['numberPrefix'] === "+39") echo "selected"; ?>>IT +39</option>
+                            <option value="+1" <?php if(isset($_POST['numberPrefix']) && $_POST['numberPrefix'] === "+1") echo "selected"; ?>>US +1</option>
+                            <option value="+44" <?php if(isset($_POST['numberPrefix']) && $_POST['numberPrefix'] === "+44") echo "selected"; ?>>UK +44</option>
+                            <option value="+49" <?php if(isset($_POST['numberPrefix']) && $_POST['numberPrefix'] === "+49") echo "selected"; ?>>DE +49</option>
+                            <option value="+33" <?php if(isset($_POST['numberPrefix']) && $_POST['numberPrefix'] === "+33") echo "selected"; ?>>FR +33</option>
+                            <option value="+34" <?php if(isset($_POST['numberPrefix']) && $_POST['numberPrefix'] === "+34") echo "selected"; ?>>ES +34</option>
                         </select>
-                        <input name="number" required value="" type="tel">
+                        <input name="number" required value="<?php echo isset($_POST['number']) ? $_POST['number'] : ''; ?>" type="tel">
                     </div>
                 </div>
                 <h4>Dati di accesso</h4>
                 <div class="input-grouped">
                     <div class="input-field">
                         <label for="email">Email *</label>
-                        <input name="email" required value="" type="email">
+                        <input name="email" required value="<?php echo isset($_POST['email']) ? $_POST['email'] : ''; ?>" type="email">
                     </div>
                     <div class="input-field">
                         <label for="confirmEmail">Conferma Email *</label>
-                        <input name="confirmEmail" required value="" type="email">
+                        <input name="confirmEmail" required value="<?php echo isset($_POST['confirmEmail']) ? $_POST['confirmEmail'] : ''; ?>" type="email">
                     </div>
                 </div>
                 <p class="p-subtitle italic margin-bottom">La password deve essere lunga tra 8 e 32 caratteri, deve contenere almeno 
@@ -205,26 +228,26 @@
                 <div class="input-grouped">
                     <div class="input-field">
                         <label for="name">Nome *</label>
-                        <input name="name" required value="" type="text">
+                        <input name="name" required value="<?php echo isset($_POST['name']) ? $_POST['name'] : ''; ?>" type="text">
                     </div>
                     <div class="input-field">
                         <label for="surname">Cognome *</label>
-                        <input name="surname" required value="" type="text">
+                        <input name="surname" required value="<?php echo isset($_POST['surname']) ? $_POST['surname'] : ''; ?>" type="text">
                     </div>
                 </div>
                 <div class="input-grouped">
                     <div class="input-field">
                         <label for="birth">Data di nascita *</label>
-                        <input name="birth" required value="" type="date">
+                        <input name="birth" required value="<?php echo isset($_POST['birth']) ? $_POST['birth'] : ''; ?>" type="date">
                     </div>
                     <div class="input-field">
                         <label for="birthPlace">Luogo di nascita</label>
-                        <input name="birthPlace" value="" type="text">
+                        <input name="birthPlace" value="<?php echo isset($_POST['birthPlace']) ? $_POST['birthPlace'] : ''; ?>" type="text">
                     </div>
                 </div>
                 <h4 class="margin-bottom">Newsletter</h4>                  
                 <label for="newsletter" class="margin-bottom">
-                    <input type="checkbox" id="newsletter" name="newsletter" value="newsletter"/>
+                    <input type="checkbox" id="newsletter" name="newsletter" value="newsletter" <?php if(isset($_POST['newsletter'])) echo "checked"; ?>/>
                     Sì, desidero rimanere aggiornato sulle ultime news dei miei 
                     eventi preferiti. Presale, promozioni, nuovi show e tanto altro! 
                     (facoltativo)
@@ -234,10 +257,10 @@
                     <a href="#">Informativa Privacy</a> *
                 </p>
                 <div class="input-grouped margin-bottom-double">
-                    <label><input required type="radio" name="privacy" value="agreePrivacy"/>
+                    <label><input id="checkPrivacy" required type="radio" name="privacy" value="agreePrivacy" <?php if(isset($_POST['privacy']) && $_POST['privacy'] === "agreePrivacy") echo "checked"; ?>/>
                         Acconsento
                     </label>
-                    <label><input required type="radio" name="privacy" value="disagreePrivacy"/>
+                    <label><input required type="radio" name="privacy" value="disagreePrivacy" <?php if(isset($_POST['privacy']) && $_POST['privacy'] === "disagreePrivacy") echo "checked"; ?>/>
                         Non acconsento
                     </label>
                 </div>
@@ -245,10 +268,10 @@
                     <a href="#">Termini e condizioni di servizio</a> *
                 </p>
                 <div class="input-grouped margin-bottom-double">
-                    <label><input required type="radio" name="terms" value="agreeTerms"/>
+                    <label><input id="checkTerms" required type="radio" name="terms" value="agreeTerms" <?php if(isset($_POST['terms']) && $_POST['terms'] === "agreeTerms") echo "checked"; ?>/>
                         Acconsento
                     </label>
-                    <label><input required type="radio" name="terms" value="disagreeTerms"/>
+                    <label><input required type="radio" name="terms" value="disagreeTerms" <?php if(isset($_POST['terms']) && $_POST['terms'] === "disagreeTerms") echo "checked"; ?>/>
                         Non acconsento
                     </label>
                 </div>

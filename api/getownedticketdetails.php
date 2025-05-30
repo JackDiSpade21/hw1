@@ -21,13 +21,22 @@
     mysqli_free_result($check_result);
 
     $query = "SELECT biglietto.ID, biglietto.Codice, biglietto.Stato,
-            biglietto.Tipo, biglietto.Evento
-            FROM ricevuta JOIN biglietto ON biglietto.Ricevuta = ricevuta.ID
+            biglietto.Tipo, biglietto.Evento, evento.DataEvento, posto.Nome AS NomePosto
+            FROM ricevuta 
+            JOIN biglietto ON biglietto.Ricevuta = ricevuta.ID
+            JOIN evento ON biglietto.Evento = evento.ID
+            JOIN posto ON biglietto.Tipo = posto.ID
             WHERE biglietto.Ricevuta = $ricevuta;";
 
     $result = mysqli_query($conn, $query) or die(mysqli_error($conn));
     $rows = array();
+    $today = date('Y-m-d');
     while ($row = mysqli_fetch_assoc($result)) {
+        if ($row['DataEvento'] < $today && $row['Stato'] != 2) {
+            $bid = intval($row['ID']);
+            mysqli_query($conn, "UPDATE biglietto SET Stato = 2 WHERE ID = $bid");
+            $row['Stato'] = 2;
+        }
         $rows[] = $row;
     }
 

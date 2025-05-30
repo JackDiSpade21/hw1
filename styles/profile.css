@@ -1,6 +1,5 @@
 .nav-auth{
     height: 64px;
-    padding-left: 30px;
 }
 
 .border-invisible{
@@ -86,6 +85,31 @@ p{
     margin: 0 0 20px 0;
 }
 
+#load-more{
+    display: flex;
+    align-items: center;
+    padding: 8px 16px;
+    height: 24px;
+    align-self: center;
+    border-radius: 4px;
+    background-color: rgb(2, 77, 223);;
+    margin: 20px 0 10px 0;
+}
+
+#load-more:hover{
+    background-color: rgb(1, 57, 167);
+    cursor: pointer;
+}
+
+#load-more p{
+    color: white;
+    font-weight: 600;
+}
+
+.hide{
+    display: none;
+}
+
 .button-submit {
     text-decoration: none;
     font-weight: 600;
@@ -107,6 +131,32 @@ p{
     background-image: url("../cards/profilepic.jpg");
 }
 
+.profilehero{
+    padding: 16px 16px 24px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    min-height: 100px;
+    overflow: hidden;
+    color: rgb(255, 255, 255);
+    text-shadow: rgba(0, 0, 0, 0.5) 0px 0px 10px;
+    background-color: rgb(18, 18, 18);
+}
+
+@media (min-width: 900px) {
+    .profilehero {
+        padding-right: 40px;
+        padding-left: 40px;
+    }
+}
+
+@media (min-width: 720px) {
+    .profilehero {
+        padding-top: 24px;
+        padding-bottom: 48px;
+    }
+}
+
 @media (max-width: 900px) {
     #my-data{
         width: 70%;
@@ -116,5 +166,9 @@ p{
 @media (max-width: 720px) {
     #my-data{
         width: 90%;
+    }
+
+    .event-buy{
+        margin-left: 25px;
     }
 }

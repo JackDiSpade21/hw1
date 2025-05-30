@@ -33,10 +33,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="./styles/eventpage.css">
-    <script src="./scripts/nav.js" defer></script>
     <script src="./scripts/footer.js" defer></script>
-    <script src="./scripts/eventpage.js" defer></script>
-    <script src="./scripts/menu.js" defer></script>
+    <script src="./scripts/profile.js" defer></script>
     <link rel="stylesheet" type="text/css" href="./styles/nav.css">
     <link rel="stylesheet" type="text/css" href="./styles/profile.css">
     <link rel="stylesheet" type="text/css" href="./styles/header.css">
@@ -118,7 +116,7 @@
         </div>
     </section>
 
-    <section id="hero">
+    <section class="profilehero">
         <div id="heroblur" class="profilepic"></div>   
         <div id="description" class="width-limiter des-box">
             <div id="link-path">
@@ -144,7 +142,7 @@
     <section id="main">
         <div id="event-container">
             <div class="width-limiter">
-                <div id="my-tickets" class="">
+                <div id="my-tickets" class="hidden">
                     <div class="section-title">
                         <p></p>
                         <h2>I tuoi biglietti</h2>
@@ -153,73 +151,12 @@
                         <div class="event-count">
                             <h2>Elenco dei biglietti posseduti</h2>
                         </div>
-                        <div class="event-entry">
-                            <div class="event-info">
-                                <div class="event-desc">
-                                    <strong>BLACKPINK WORLD TOUR IN MILAN</strong>
-                                    <p>Hai acquistato <strong>3</strong> biglietti il <strong>23/05/25</strong>.</p>                                
-                                    <p>Milano - Ippodromo SNAI La Maura - 06 AGO - 20:00</p>
-                                </div>
-                                <a class="event-buy" data-event-id="id">
-                                    <p>Dettaglio</p>
-                                    <img src="./icons/freccia.png"></img>
-                                </a>
-                            </div>
+                        <div id="event-list">
+
                         </div>
-
-                        <div class="event-entry">
-                            <div class="event-info border-invisible">
-                                <div class="event-desc">
-                                    <strong>BLACKPINK WORLD TOUR IN MILAN</strong>
-                                    <p>Hai acquistato <strong>3</strong> biglietti il <strong>23/05/25</strong>.</p>                                
-                                    <p>Milano - Ippodromo SNAI La Maura - 06 AGO - 20:00</p>
-                                </div>
-                                <a class="event-buy" data-event-id="id">
-                                    <p>Dettaglio</p>
-                                    <img src="./icons/freccia.png"></img>
-                                </a>
-                            </div>
-                            <div class="ticket">
-                                <img class="qr-code" src="./icons/cross.png"></img>
-                                <div class="ticket-info">
-                                    <strong>ID #465723</strong>
-                                    <p>Poltrona VIP</p>
-                                    <label class="valid">Valido</label>
-                                </div>
-                            </div>
-
-                            <div class="ticket">
-                                <img class="qr-code" src="./icons/cross.png"></img>
-                                <div class="ticket-info">
-                                    <strong>ID #465723</strong>
-                                    <p>Poltrona Regular</p>
-                                    <label class="used">Utilizzato</label>
-                                </div>
-                            </div>
-
-                            <div class="ticket">
-                                <img class="qr-code" src="./icons/cross.png"></img>
-                                <div class="ticket-info">
-                                    <strong>ID #465723</strong>
-                                    <p>Poltrona Economy</p>
-                                    <label class="expired">Scaduto</label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="event-entry">
-                            <div class="event-info">
-                                <div class="event-desc">
-                                    <strong>BLACKPINK WORLD TOUR IN MILAN</strong>
-                                    <p>Hai acquistato <strong>3</strong> biglietti il <strong>23/05/25</strong>.</p>                                
-                                    <p>Milano - Ippodromo SNAI La Maura - 06 AGO - 20:00</p>
-                                </div>
-                                <a class="event-buy" data-event-id="id">
-                                    <p>Dettaglio</p>
-                                    <img src="./icons/freccia.png"></img>
-                                </a>
-                            </div>
-                        </div>
+                        <a id="load-more">
+                            <p>Carica altro</p>
+                        </a>
                     </div>
                 </div>
 

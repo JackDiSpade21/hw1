@@ -14,8 +14,11 @@
 
     $conn = mysqli_connect($dbconfig['host'], $dbconfig['user'], $dbconfig['password'], $dbconfig['name']) or die(mysqli_connect_error());
 
-    $query = "SELECT * FROM ricevuta
-            JOIN evento ON ricevuta.Evento = evento.ID
+    $query = "SELECT ricevuta.ID, ricevuta.Totale, ricevuta.Quantita, ricevuta.Acquisto,
+            ricevuta.Evento, ricevuta.Informazioni, evento.Nome, evento.Luogo,
+            evento.DataEvento, evento.Ora, artista.Nome AS NomeArtista
+            FROM ricevuta JOIN evento ON ricevuta.Evento = evento.ID
+            JOIN artista ON evento.Artista = artista.ID
             WHERE ricevuta.Utente = '$email'
             ORDER BY ricevuta.Acquisto DESC
             LIMIT $start, $count;";

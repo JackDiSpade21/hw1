@@ -159,7 +159,6 @@
     </nav>
 
     <section id="main">
-        <!-- Stampa errori -->
         <h4 id="error" 
             <?php 
             if (count($error) > 0) { 

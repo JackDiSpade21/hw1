@@ -16,35 +16,45 @@ WHERE evento.ID = 28;
 SELECT SUM(Capacita) AS Rimasti FROM posto
 WHERE evento = 28;
 
+SELECT * 
+FROM ricevuta JOIN evento ON ricevuta.Evento = evento.ID
+-- WHERE ricevuta.Utente = 'utente';
+
+SELECT biglietto.ID, biglietto.Codice, biglietto.Stato, biglietto.Tipo,
+biglietto.Evento
+FROM ricevuta JOIN biglietto ON biglietto.Ricevuta = ricevuta.ID
+-- WHERE biglietto.Ricevuta = RICEVUTA;
+
 -- BuyTicket
 DROP PROCEDURE IF EXISTS BuyTicket;
 DELIMITER //
 CREATE PROCEDURE IF NOT EXISTS BuyTicket(
-IN Codice_in VARCHAR(40),
-IN evento_in INT,
-IN Tipo_in INT,
-IN Utente_in VARCHAR(20))
+    IN Codice_in VARCHAR(40),
+    IN evento_in INT,
+    IN Tipo_in INT,
+    IN Ricevuta_in INT
+)
 BEGIN
-	DECLARE posti_rimasti INT DEFAULT 0;
-	DECLARE ticket_id INT DEFAULT 0;
-START TRANSACTION;
+    DECLARE posti_rimasti INT DEFAULT 0;
+    DECLARE ticket_id INT DEFAULT 0;
+    START TRANSACTION;
 
-	SELECT Capacita INTO posti_rimasti FROM POSTO
-	WHERE Tipo_in = posto.ID;
-	
-	IF posti_rimasti <= 0 THEN
-		ROLLBACK WORK;
-		SELECT 0 AS Stato;
-	END IF;
-	
-	SELECT MAX(ID) + 1 INTO ticket_id FROM biglietto;
-	
-	INSERT INTO biglietto (ID, Codice, Stato, Acquisto, Tipo, Evento, Utente)
-	VALUES (ticket_id, Codice_in, 0, CURRENT_DATE(), Tipo_in, evento_in, Utente_in);
+    SELECT Capacita INTO posti_rimasti FROM POSTO
+    WHERE Tipo_in = posto.ID;
 
-	SELECT 1 AS Stato;
+    IF posti_rimasti <= 0 THEN
+        ROLLBACK WORK;
+        SELECT 0 AS Stato, NULL AS TicketID;
+    END IF;
 
-COMMIT WORK;
+    SELECT IFNULL(MAX(ID), 0) + 1 INTO ticket_id FROM biglietto;
+
+    INSERT INTO biglietto (ID, Codice, Stato, Tipo, Evento, Ricevuta)
+    VALUES (ticket_id, Codice_in, 0, Tipo_in, evento_in, Ricevuta_in);
+
+    SELECT 1 AS Stato, ticket_id AS TicketID;
+
+    COMMIT WORK;
 END //
 DELIMITER ;
 
@@ -65,5 +75,46 @@ BEGIN
 		WHERE NEW.Tipo = posto.ID;
 	END IF;
 	
+END //
+DELIMITER ;
+
+DROP TRIGGER IF EXISTS RestorePostiDisponibili;
+DELIMITER //
+CREATE TRIGGER IF NOT EXISTS RestorePostiDisponibili
+AFTER DELETE ON biglietto
+FOR EACH ROW
+BEGIN
+    IF EXISTS (
+        SELECT * FROM posto
+        WHERE posto.Evento = OLD.Evento
+    ) THEN
+        UPDATE posto
+        SET Capacita = Capacita + 1
+        WHERE OLD.Tipo = posto.ID;
+    END IF;
+END //
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS CreateRicevuta;
+DELIMITER //
+CREATE PROCEDURE IF NOT EXISTS CreateRicevuta(
+    IN Totale_in FLOAT,
+    IN Quantita_in INT,
+    IN Evento_in INT,
+    IN Utente_in VARCHAR(40),
+    IN Informazioni_in VARCHAR(800)
+)
+BEGIN
+    DECLARE ricevuta_id INT DEFAULT 0;
+    START TRANSACTION;
+
+    SELECT IFNULL(MAX(ID), 0) + 1 INTO ricevuta_id FROM Ricevuta;
+
+    INSERT INTO Ricevuta (ID, Totale, Quantita, Acquisto, Evento, Utente, Informazioni)
+    VALUES (ricevuta_id, Totale_in, Quantita_in, CURDATE(), Evento_in, Utente_in, Informazioni_in);
+
+    SELECT 1 AS Stato, ricevuta_id AS RicevutaID;
+
+    COMMIT WORK;
 END //
 DELIMITER ;

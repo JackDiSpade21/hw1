@@ -262,7 +262,7 @@ a.all-category:hover{
     position: absolute;
     top: 0;
     left: 0;
-    z-index: 2;
+    z-index: 3;
     width: 50vh;
     background-color: rgb(18, 18, 18);
     color: white;

@@ -243,7 +243,8 @@
                     <h4 
                         <?php if($buy == 2) echo 'class="error"'; else echo 'class="hidden"'; ?>>
                     
-                        Si è verificato un errore nell'acquisto.<br>Riprova più tardi.
+                        Errore durante l'emissione dei biglietti.<br>
+                        Nessun biglietto è stato emesso.<br> Riprova più tardi.
                 
                     </h4>
 

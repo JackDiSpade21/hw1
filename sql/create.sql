@@ -83,7 +83,7 @@ CREATE TABLE if NOT EXISTS Ricevuta(
 	Acquisto DATE,
 	Evento INT,
 	Utente VARCHAR(40),
-	Informazioni VARCHAR(400),
+	Informazioni VARCHAR(800),
 
 	PRIMARY KEY(ID),
 	FOREIGN KEY(Evento) REFERENCES Evento(ID),
@@ -339,5 +339,5 @@ INSERT INTO Posto (ID, Nome, Costo, Des, Capacita, Evento) VALUES
 (64, 'Biglietto Regular', 50.50, 'Poltrone normali.', 19, 64),
 (65, 'Tribune', 41.00, 'Visibilità normale.', 14, 65),
 (28, 'Biglietto VIP', 248.50, 'Poltrone migliori.', 3, 28),
-(66, 'Biglietto Regular', 148.50, 'Poltrone normali.', 17, 28),
-(67, 'Biglietto Economy', 64.50, 'Visibilità limitata.', 4, 28);
+(66, 'Biglietto Regular', 148.50, 'Poltrone normali.', 4, 28),
+(67, 'Biglietto Economy', 64.50, 'Visibilità limitata.', 0, 28);

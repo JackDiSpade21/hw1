@@ -1,4 +1,5 @@
 <?php
+    require_once './dbconfig.php';
     session_start();
     if (!isset($_SESSION['email'])) {
         header("Location: ./login.php");
@@ -10,11 +11,11 @@
         exit();
     }
 
-    $conn = mysqli_connect("localhost", "root", "", "ticketmaster") or die(mysqli_connect_error());
-
+    $conn = mysqli_connect($dbconfig['host'], $dbconfig['user'], $dbconfig['password'], $dbconfig['name']) or die(mysqli_connect_error());
+        
     $query = "SELECT artista.Nome, artista.Img FROM evento
-            JOIN artista ON evento.Artista = artista.ID
-            WHERE evento.ID =  " .$_GET['id'];
+        JOIN artista ON evento.Artista = artista.ID
+        WHERE evento.ID =  " .$_GET['id'];
     $result = mysqli_query($conn, $query) or die(mysqli_error($conn));
     $artista = mysqli_fetch_assoc($result);
 
@@ -30,6 +31,160 @@
     $query = "Select * FROM Utente WHERE Mail = '" . mysqli_real_escape_string($conn, $_SESSION['email']) . "'";
     $result = mysqli_query($conn, $query) or die(mysqli_error($conn));
     $utente = mysqli_fetch_assoc($result);
+
+    $error = array();
+
+    if (
+        !empty($_POST['name']) &&
+        !empty($_POST['surname']) &&
+        !empty($_POST['address']) &&
+        !empty($_POST['city']) &&
+        !empty($_POST['cap']) &&
+        !empty($_POST['card']) &&
+        !empty($_POST['cvc']) &&
+        !empty($_POST['expiry']) &&
+        !empty($_POST['print'])
+    ) {
+        $ticket_sum = 0;
+        foreach ($_POST as $key => $value) {
+            if (strpos($key, 'quantity_') === 0) {
+                $qty = intval($value);
+                if ($qty < 0) $qty = 0;
+                $ticket_sum += $qty;
+            }
+        }
+        if ($ticket_sum < 1) {
+            $error[] = "Seleziona almeno un biglietto.";
+        }
+        if ($ticket_sum > 5) {
+            $error[] = "Puoi acquistare al massimo 5 biglietti per ordine.";
+        }
+
+        if (!preg_match('/^\d{5}$/', $_POST['cap'])) {
+            $error[] = "Il CAP deve essere composto da 5 cifre.";
+        }
+
+        if (!preg_match('/^\d{16}$/', $_POST['card'])) {
+            $error[] = "Il numero di carta deve essere composto da 16 cifre.";
+        }
+
+        if (!preg_match('/^\d{3}$/', $_POST['cvc'])) {
+            $error[] = "Il CVC deve essere composto da 3 cifre.";
+        }
+
+        if (!preg_match('/^(0[1-9]|1[0-2])\/\d{2}$/', $_POST['expiry'])) {
+            $error[] = "La data di scadenza deve essere nel formato MM/AA.";
+        } else {
+            list($mm, $yy) = explode('/', $_POST['expiry']);
+            $expMonth = intval($mm);
+            $expYear = 2000 + intval($yy);
+            $nowMonth = intval(date('n'));
+            $nowYear = intval(date('Y'));
+            if ($expYear < $nowYear || ($expYear === $nowYear && $expMonth < $nowMonth)) {
+                $error[] = "La carta è scaduta.";
+            }
+        }
+
+        if (!in_array($_POST['print'], ['pay', 'free'])) {
+            $error[] = "Seleziona una modalità di consegna valida.";
+        }
+
+        if (count($error) === 0) { 
+            $totale = 0.0;
+            $quantita = 0;
+            $informazioni = "";
+
+            foreach ($_POST as $key => $value) {
+                if (strpos($key, 'quantity_') === 0) {
+                    $tipo_id = intval(str_replace('quantity_', '', $key));
+                    $qty = intval($value);
+                    if ($qty > 0) {
+                        $query = "SELECT Costo, Nome FROM Posto WHERE ID = $tipo_id";
+                        $res = mysqli_query($conn, $query);
+                        if ($posto = mysqli_fetch_assoc($res)) {
+                            $totale += $posto['Costo'] * $qty;
+                            $informazioni .= "Biglietto: " . htmlspecialchars($posto['Nome']) . " x" . $qty . "<br>";
+                        }
+                        mysqli_free_result($res);
+                        $quantita += $qty;
+                    }
+                }
+            }
+            if ($_POST['print'] === 'pay') {
+                $totale += 10.00;
+                $informazioni .= "Spedizione: Corriere espresso<br>";
+            } else {
+                $informazioni .= "Spedizione: Stampa a casa<br>";
+            }
+            $fields_to_save = [
+                'name' => 'Nome',
+                'surname' => 'Cognome',
+                'address' => 'Indirizzo',
+                'cap' => 'CAP',
+                'city' => 'Provincia',
+                'card' => 'Numero carta',
+                'expiry' => 'Scadenza carta'
+            ];
+            foreach ($fields_to_save as $field => $label) {
+                if (isset($_POST[$field])) {
+                    $informazioni .= $label . ": " . htmlspecialchars($_POST[$field]) . "<br>";
+                }
+            }
+
+            $stmt = mysqli_prepare($conn, "CALL CreateRicevuta(?, ?, ?, ?, ?)");
+            mysqli_stmt_bind_param($stmt, "diiss", $totale, $quantita, $evento['ID'], $utente['Mail'], $informazioni);
+            mysqli_stmt_execute($stmt);
+            $result = mysqli_stmt_get_result($stmt);
+            $row = mysqli_fetch_assoc($result);
+            $ricevuta_id = $row ? $row['RicevutaID'] : null;
+            mysqli_free_result($result);
+            mysqli_next_result($conn);
+
+            if (!$ricevuta_id) {
+                $error[] = "Errore nella generazione della ricevuta.";
+            } else {
+                $emitted_ticket_ids = array();
+                $success = true;
+
+                foreach ($_POST as $key => $value) {
+                    if (strpos($key, 'quantity_') === 0) {
+                        $tipo_id = intval(str_replace('quantity_', '', $key));
+                        $qty = intval($value);
+                        for ($i = 0; $i < $qty; $i++) {
+                            $codice = bin2hex(random_bytes(20));
+                            $stmt = mysqli_prepare($conn, "CALL BuyTicket(?, ?, ?, ?)");
+                            mysqli_stmt_bind_param($stmt, "siis", $codice, $evento['ID'], $tipo_id, $ricevuta_id);
+                            mysqli_stmt_execute($stmt);
+                            $result = mysqli_stmt_get_result($stmt);
+                            $row = mysqli_fetch_assoc($result);
+                            mysqli_free_result($result);
+                            mysqli_next_result($conn);
+
+                            if ($row['Stato'] == 1 && !empty($row['TicketID'])) {
+                                $emitted_ticket_ids[] = $row['TicketID'];
+                            } else {
+                                $success = false;
+                                break 2;
+                            }
+                        }
+                    }
+                }
+
+                if (!$success && count($emitted_ticket_ids) > 0) {
+                    $ids = implode(',', array_map('intval', $emitted_ticket_ids));
+                    mysqli_query($conn, "DELETE FROM biglietto WHERE ID IN ($ids)");
+                    mysqli_query($conn, "DELETE FROM ricevuta WHERE ID = " . intval($ricevuta_id));
+                    header("Location: profile.php?buy=2");
+                    exit();
+                }
+
+                if ($success) {
+                    header("Location: profile.php?buy=1");
+                    exit();
+                }
+            }
+        }
+    } 
 
     mysqli_free_result($result);
     mysqli_close($conn);
@@ -118,7 +273,7 @@
                 <div class="margin-bottom-double">
                     
                     <label>
-                        <input required="required" type="radio" name="print" value="pay"/>
+                        <input required="required" type="radio" name="print" value="pay" <?php if(isset($_POST['print']) && $_POST['print'] === 'pay') echo 'checked'; ?>/>
                         <div class="ticket-mode">
                             <p>Spedizione tramite corriere espresso.</p>
                             <p class="print-price">10,00 €</p>
@@ -128,7 +283,7 @@
                     <div class="divider-buy"></div>
                     
                     <label>
-                        <input required="required" type="radio" name="print" value="free" checked/>
+                        <input required="required" type="radio" name="print" value="free" <?php if(!isset($_POST['print']) || $_POST['print'] === 'free') echo 'checked'; ?>/>
                         <div class="ticket-mode">
                             <p>Stampa a casa, ricevi via mail.</p>
                             <p class="print-price">Gratis</p>
@@ -147,29 +302,29 @@
                 <div class="input-grouped margin-bottom">
                     <div class="input-field">
                         <label>Nome *</label>
-                        <input name="name" required="required" value="" type="text">
+                        <input name="name" required="required" value="<?php echo isset($_POST['name']) ? htmlspecialchars($_POST['name']) : '' ?>" type="text">
                     </div>
                     <div class="input-field">
                         <label for="surname">Cognome *</label>
-                        <input name="surname" required="required" value="" type="text">
+                        <input name="surname" required="required" value="<?php echo isset($_POST['surname']) ? htmlspecialchars($_POST['surname']) : '' ?>" type="text">
                     </div>
                 </div>
 
                 <div class="input-grouped margin-bottom">
                     <div class="input-field">
                         <label for="address">Indirizzo completo *</label>
-                        <input name="address" required="required" value="" type="text">
+                        <input name="address" required="required" value="<?php echo isset($_POST['address']) ? htmlspecialchars($_POST['address']) : '' ?>" type="text">
                     </div>
                     <div class="input-field">
                         <label for="cap">CAP *</label>
-                        <input name="cap" required="required" value="" type="text">
+                        <input name="cap" required="required" value="<?php echo isset($_POST['cap']) ? htmlspecialchars($_POST['cap']) : '' ?>" type="text">
                     </div>
                 </div>
 
                 <div class="input-grouped margin-bottom">
                     <div class="input-field">
                         <label for="city">Provincia *</label>
-                        <input name="city" required="required" value="" type="text">
+                        <input name="city" required="required" value="<?php echo isset($_POST['city']) ? htmlspecialchars($_POST['city']) : '' ?>" type="text">
                     </div>
                 </div>
 
@@ -178,18 +333,18 @@
                 <div class="input-grouped margin-bottom">
                     <div class="input-field">
                         <label for="card">Numero di carta *</label>
-                        <input name="card" required="required" value="" type="text">
+                        <input name="card" required="required" value="<?php echo isset($_POST['card']) ? htmlspecialchars($_POST['card']) : '' ?>" type="text" maxlength="16">
                     </div>
                     <div class="input-field">
                         <label>CVC *</label>
-                        <input name="cvc" required="required" value="" type="text">
+                        <input name="cvc" required="required" value="" type="text" maxlength="3">
                     </div>
                 </div>
 
                 <div class="input-grouped">
                     <div class="input-field">
-                        <label>Data di scadenza *</label>
-                        <input name="expiry" required="required" value="" type="text" >
+                        <label>Data di scadenza (MM/AA) *</label>
+                        <input name="expiry" required="required" value="<?php echo isset($_POST['expiry']) ? htmlspecialchars($_POST['expiry']) : '' ?>" type="text" maxlength="5">
                     </div>
                 </div>
 
@@ -347,4 +502,4 @@
         </div>
     </footer>
 </body>
-</html>        
+</html>

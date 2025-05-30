@@ -1,49 +1,50 @@
 <?php
-        if (!isset($_GET['id'])) {
-            header("Location: index.php");
-            exit;
+    require_once './dbconfig.php';
+    if (!isset($_GET['id'])) {
+        header("Location: index.php");
+        exit;
+    }
+
+    session_start();
+
+    $conn = mysqli_connect($dbconfig['host'], $dbconfig['user'], $dbconfig['password'], $dbconfig['name']) or die(mysqli_connect_error());
+    $query = "SELECT * FROM Artista WHERE ID = " .$_GET['id'] . " LIMIT 1";
+    $result = mysqli_query($conn, $query) or die(mysqli_error($conn));
+    $row = mysqli_fetch_assoc($result);
+    
+    $query2 = "SELECT scaletta.ID as ScalettaID, scaletta.Nome as ScalettaNome, concerto.Canzone 
+                FROM artista
+                JOIN scaletta ON artista.ID = scaletta.Artista
+                RIGHT JOIN concerto ON concerto.Scaletta = scaletta.ID
+                WHERE artista.ID =".$_GET['id'].";";
+
+    $result = mysqli_query($conn, $query2) or die(mysqli_error($conn));
+
+    $scalette = array();
+    while ($row2 = mysqli_fetch_assoc($result)) {
+        $sid = $row2['ScalettaID'];
+        if (!isset($scalette[$sid])) {
+            $scalette[$sid] = [
+                'nome' => $row2['ScalettaNome'],
+                'canzoni' => []
+            ];
         }
+        $scalette[$sid]['canzoni'][] = $row2['Canzone'];
+    }
 
-        session_start();
+    //print_r($scalette);
 
-        $conn = mysqli_connect("localhost", "root", "", "ticketmaster") or die(mysqli_connect_error());
-        $query = "SELECT * FROM Artista WHERE ID = " .$_GET['id'] . " LIMIT 1";
-        $result = mysqli_query($conn, $query) or die(mysqli_error($conn));
-        $row = mysqli_fetch_assoc($result);
+    if(isset($_SESSION['email'])) {
+        $email = mysqli_real_escape_string($conn, $_SESSION['email']);
         
-        $query2 = "SELECT scaletta.ID as ScalettaID, scaletta.Nome as ScalettaNome, concerto.Canzone 
-                    FROM artista
-                    JOIN scaletta ON artista.ID = scaletta.Artista
-                    RIGHT JOIN concerto ON concerto.Scaletta = scaletta.ID
-                    WHERE artista.ID =".$_GET['id'].";";
+        $query3 = "SELECT * FROM Utente WHERE Mail = '".$email."'";
 
-        $result = mysqli_query($conn, $query2) or die(mysqli_error($conn));
+        $result = mysqli_query($conn, $query3) or die(mysqli_error($conn));
+        $utente = mysqli_fetch_assoc($result);
+    }
 
-        $scalette = array();
-        while ($row2 = mysqli_fetch_assoc($result)) {
-            $sid = $row2['ScalettaID'];
-            if (!isset($scalette[$sid])) {
-                $scalette[$sid] = [
-                    'nome' => $row2['ScalettaNome'],
-                    'canzoni' => []
-                ];
-            }
-            $scalette[$sid]['canzoni'][] = $row2['Canzone'];
-        }
-
-        //print_r($scalette);
-
-        if(isset($_SESSION['email'])) {
-            $email = mysqli_real_escape_string($conn, $_SESSION['email']);
-            
-            $query3 = "SELECT * FROM Utente WHERE Mail = '".$email."'";
-
-            $result = mysqli_query($conn, $query3) or die(mysqli_error($conn));
-            $credenziali = mysqli_fetch_assoc($result);
-        }
-
-        mysqli_free_result($result);
-        mysqli_close($conn);
+    mysqli_free_result($result);
+    mysqli_close($conn);
 ?>
 <html>
 <head>
@@ -80,156 +81,8 @@
 
     </div>
 
-    <header>
-        <div id="languages">
-            <img id="flag"src="./icons/italy.png"></img>
-            <a href="#">IT</a>
-            <img src="./icons/lang.png"></img>
-            <a href="#">IT</a>
-        </div>
-        <div id="info">
-            <a href="#">Blog</a>
-            <a href="#">Newsletter</a>
-            <a href="#">B2B</a>
-            <a href="#">FAQ</a>
-            <div id="paypal"></div>
-        </div>
-    </header>
-    <nav>
-        <div id="left-navbar">
-            <div id="mobile-menu">
-                <img src="./icons/menu.png">
-            </div>
-            <a href="./index.php" class="logo">
-                <img src="./icons/logo.png">
-            </a>
-            <div id="navigation">
-                <div id="Musica" class="nav-button nav-b-hover">Musica</div>
-                <div id="Festival" class="nav-button nav-b-hover">Festival</div>
-                <div id="Arte" class="nav-button nav-b-hover">Arte & Teatro</div>
-                <div id="Sport" class="nav-button nav-b-hover">Sport</div>
-                <div id="Tempo" class="nav-button nav-b-hover">Tempo libero</div>
-                <div id="Altro" class="nav-button nav-b-hover">Altro</div>
-            </div>
-        </div>
-        <div id="functions">
-            <div id="webbar" class="searchbar">
-                <input type="text" placeholder="Artista, Evento o Località"></input>
-                <div id="sbutton"><img id="search" src="./icons/search.png"></img></div>
-            </div>
-            <a id="login" <?php 
-                    if(isset($credenziali)){
-                        echo "href='./profile.php'";
-                    } else {
-                        echo "href='./login.php'";
-                    }
-                ?>><img id="person" src="./icons/person.png">
-                <p><?php 
-                    if(isset($credenziali)){
-                        $nome = $credenziali['Nome'];
-                        if(strlen($nome) > 14){
-                            echo substr($nome, 0, 14) . "..";
-                        } else {
-                            echo $nome;
-                        }
-                    } else {
-                        echo "Accedi/Registrati";
-                    }
-                ?></p>
-            </a>
-        </div>
-
-        <div id="modal-nav-desktop" class="hidden">
-            <div id="nav-sidebar" class="hidden">
-                <div id="other-music" class="other-navigation other-buttons">
-                    <p>Musica</p>
-                    <img src="./icons/freccia.png">
-                </div>
-                <div id="other-festival" class="other-navigation other-buttons">
-                    <p>Festival</p>
-                    <img src="./icons/freccia.png">
-                </div>
-                <div id="other-art" class="other-navigation other-buttons">
-                    <p>Arte & Teatro</p>
-                    <img src="./icons/freccia.png">
-                </div>
-                <div id="other-sport" class="other-navigation other-buttons">
-                    <p>Sport</p>
-                    <img src="./icons/freccia.png">
-                </div>
-                <div id="other-tempo" class="other-navigation other-buttons other-active">
-                    <p>Tempo Libero</p>
-                    <img src="./icons/freccia.png">
-                </div>
-            </div>
-
-            <div id="nav-box-wrapper">
-                
-            </div>
-        </div>
-    </nav>
-
-    <div id="barwrapper">
-        <div id="mobilebar" class="searchbar">
-            <input type="text" placeholder="Artista, Evento o Località"></input>
-            <div id="sbutton"><img id="search" src="./icons/search.png"></img></div>
-        </div>
-    </div>
-
-    <section id="mobile-menu-nav" class="hidden">
-        <div id="menutop">
-            <div class="menu-item">
-                <a href="./index.php" class="logo">
-                    <img src="./icons/logo.png">
-                </a>
-                <div id="close-button"><img src="./icons/cross.png"></div>
-            </div>
-            <div id="dividermobile-top"><div></div></div>
-
-            <div class="menu-item menu-hoverable">
-                <h3>MUSICA</h2>
-                <img src="./icons/freccia.png">
-            </div>
-            <div class="menu-item menu-hoverable">
-                <h3>FESTIVAL</h2>
-                <img src="./icons/freccia.png">
-            </div>
-            <div class="menu-item menu-hoverable">
-                <h3>ARTE & TEATRO</h2>
-                <img src="./icons/freccia.png">
-            </div>
-            <div class="menu-item menu-hoverable">
-                <h3>SPORT</h2>
-                <img src="./icons/freccia.png">
-            </div>
-            <div class="menu-item menu-hoverable">
-                <h3>TEMPO LIBERO</h2>
-                <img src="./icons/freccia.png">
-            </div>
-        </div>
-
-        <div id="menubottom">
-            <div class="menu-item">
-                <a href="#">Blog</a>
-            </div>
-            <div id="dividermobile" ><div></div></div>
-            <div class="menu-item">
-                <a href="#">Newsletter</a>
-            </div>
-            <div id="dividermobile"><div></div></div>
-            <div class="menu-item">
-                <a href="#">B2B</a>
-            </div>
-            <div id="dividermobile"><div></div></div>
-            <div class="menu-item">
-                <a href="#">FAQ</a>
-            </div>
-            
-            <div class="menu-item">
-                <img id="paypalmobile" src="./icons/paypalmobile.png">
-            </div>
-        </div>
-    </section>
+    <?php include './blocks/top.php'; ?>
+    <?php include './blocks/mobiletop.php'; ?>
 
     <section id="hero">
         <div id="heroblur" style="background-image: url('<?php echo $row['Img']; ?>');"></div>
@@ -392,140 +245,6 @@
         </div>
     </section>
 
-    <footer>
-        <div id="footer">
-            <div id="promo">
-                <a href="./index.php" class="logo">
-                    <img src="./icons/logo.png">
-                </a>
-                <p>Seguiteci</p>
-                <div id="social">
-                    <div class="app-icon"><img src="./social/facebook.png"></img></div>
-                    <div class="app-icon"><img src="./social/instagram.png"></img></div>
-                    <div class="app-icon"><img src="./social/blog.png"></img></div>
-                    <div class="app-icon"><img src="./social/youtube.png"></img></div>
-                    <div class="app-icon"><img src="./social/spotify.png"></img></div>
-                    <div class="app-icon"><img src="./social/tiktok.png"></img></div>
-                    <div class="app-icon"><img src="./social/linkedin.png"></img></div>
-                </div>
-                <p id="disclaimer">Ticketmaster Italia srl - Milano, Via Pietrasanta 14 - Partita IVA 09584690961 - REA MI 2100017</p>
-            </div>
-            <div id="collegamenti">
-
-                <div id="divider" class="div-mobile"><div></div></div>
-
-                <div class="elenco" data-cat="assistenza">
-                <h3>Assistenza Clienti</h3>
-                <div class="lista">                   
-                    <a href="#">FAQ</a>
-                    <a href="#">Termini e condizioni di vendita</a>
-                    <a href="#">Termini e condizioni di utilizzo</a>
-                    <a href="#">Diritto di recesso</a>
-                    <a href="#">Eventi annullati o riprogrammati</a>
-                    <a href="#">Rivendita biglietti</a>
-                    <a href="#">Cambio Nominativo</a>
-                    <a href="#">Metodi di consegna</a>
-                    <a href="#">Metodi di pagamento</a>
-                </div>
-                <img id="footer-arrow" src="./icons/downarrow.png"></img>
-                </div>
-
-                <div class="mobilelist hidden" data-cat="assistenza">                   
-                    <a href="#">FAQ</a>
-                    <a href="#">Termini e condizioni di vendita</a>
-                    <a href="#">Termini e condizioni di utilizzo</a>
-                    <a href="#">Diritto di recesso</a>
-                    <a href="#">Eventi annullati o riprogrammati</a>
-                    <a href="#">Rivendita biglietti</a>
-                    <a href="#">Cambio Nominativo</a>
-                    <a href="#">Metodi di consegna</a>
-                    <a href="#">Metodi di pagamento</a>
-                </div>
-
-                <div id="divider" class="div-mobile"><div></div></div>
-
-                <div class="elenco" data-cat="guide">
-                <h3>Guide Ticketmaster</h3>
-                <div class="lista">               
-                    <a href="#">Indiemaster</a>
-                    <a href="#">Popmaster</a>
-                    <a href="#">Festival Finder</a>
-                    <a href="#">Guida eventi sportivi</a>
-                    <a href="#">Guida Teatro</a>
-                    <a href="#">Biglietti VIP</a>
-                </div>
-                <img id="footer-arrow" src="./icons/downarrow.png"></img>
-                </div>
-
-                <div class="mobilelist hidden" data-cat="guide">               
-                    <a href="#">Indiemaster</a>
-                    <a href="#">Popmaster</a>
-                    <a href="#">Festival Finder</a>
-                    <a href="#">Guida eventi sportivi</a>
-                    <a href="#">Guida Teatro</a>
-                    <a href="#">Biglietti VIP</a>
-                </div>
-
-                <div id="divider" class="div-mobile"><div></div></div>
-
-                <div class="elenco" data-cat="network">
-                <h3>Il nostro network</h3>
-                <div class="lista">     
-                    <a href="#">Ticketmaster nel mondo</a>
-                    <a href="#">Live Nation</a>
-                    <a href="#">PayPal</a>
-                    <a href="#">Lavora con noi</a>
-                </div>
-                <img id="footer-arrow" src="./icons/downarrow.png"></img>
-                </div>
-
-                <div class="mobilelist hidden" data-cat="network">     
-                    <a href="#">Ticketmaster nel mondo</a>
-                    <a href="#">Live Nation</a>
-                    <a href="#">PayPal</a>
-                    <a href="#">Lavora con noi</a>
-                </div>
-
-                <div id="divider" class="div-mobile"><div></div></div>
-
-                <div class="elenco" data-cat="b2b">
-                <h3>B2B</h3>
-                <div class="lista">
-                    <a href="#">Chi Siamo</a>
-                    <a href="#">Artist Services</a>
-                    <a href="#">Programma Affiliati</a>
-                    <a href="#">Vendi i tuoi eventi con noi</a>
-                </div>
-                <img id="footer-arrow" src="./icons/downarrow.png"></img>
-                </div>
-
-                <div class="mobilelist hidden" data-cat="b2b">
-                    <a href="#">Chi Siamo</a>
-                    <a href="#">Artist Services</a>
-                    <a href="#">Programma Affiliati</a>
-                    <a href="#">Vendi i tuoi eventi con noi</a>
-                </div>
-
-                <div id="divider" class="div-mobile"><div></div></div>
-
-            </div>
-
-            </div>
-        </div>
-
-        <div id="divider" class="div-desktop"><div></div></div>
-
-        <div id="legal">
-            <div id="divider" class="div-mobile"><div></div></div>
-            <div id="privacy">
-                <a href="#">Informativa Privacy</a>
-                <a class="middle" href="#">Cookies</a>
-                <a href="#">Gestione dei Cookies</a>
-            </div>
-            <div id="copyright">
-                <p>© 1999-2025 Ticketmaster. Tutti i diritti riservati.</p>
-            </div>
-        </div>
-    </footer>
+    <?php include './blocks/bottom.php'; ?>
 </body>
 </html>        

@@ -1,11 +1,12 @@
 <?php
+    require_once '../dbconfig.php';
     header('Content-Type: application/json');
 
     if (!isset($_GET['id'])) {
         exit;
     }
 
-    $conn = mysqli_connect("localhost", "root", "", "ticketmaster") or die(mysqli_connect_error());
+    $conn = mysqli_connect($dbconfig['host'], $dbconfig['user'], $dbconfig['password'], $dbconfig['name']) or die(mysqli_connect_error());
 
     $query = "SELECT * FROM evento WHERE Artista = " . intval($_GET['id']) ;
     $result = mysqli_query($conn, $query) or die(mysqli_error($conn));

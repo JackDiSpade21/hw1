@@ -1,8 +1,8 @@
 <?php
-
+    require_once '../dbconfig.php';
     header('Content-Type: application/json');
 
-    $conn = mysqli_connect("localhost", "root", "", "ticketmaster") or die(mysqli_connect_error());
+    $conn = mysqli_connect($dbconfig['host'], $dbconfig['user'], $dbconfig['password'], $dbconfig['name']) or die(mysqli_connect_error());
 
     $query = "SELECT * FROM Artista";
     $result = mysqli_query($conn, $query) or die(mysqli_error($conn));

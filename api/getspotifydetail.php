@@ -1,5 +1,6 @@
 <?php
     require_once '../keys.php';
+    require_once '../dbconfig.php';
 
     // echo $spotifyApi;
     // echo $spotifySecret;
@@ -11,7 +12,7 @@
     }
 
     //Step 1
-    $conn = mysqli_connect("localhost", "root", "", "ticketmaster") or die(mysqli_connect_error());
+    $conn = mysqli_connect($dbconfig['host'], $dbconfig['user'], $dbconfig['password'], $dbconfig['name']) or die(mysqli_connect_error());
 
     $query = "SELECT nome, categoria FROM Artista WHERE ID = " . intval($_GET['id']);
     $result = mysqli_query($conn, $query) or die(mysqli_error($conn));

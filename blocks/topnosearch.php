@@ -31,10 +31,6 @@
         </div>
     </div>
     <div id="functions">
-        <form id="webbar" class="searchbar" action="search.php" method="get">
-            <input type="text" name="search" placeholder="Artista, Evento o Località">
-            <button type="submit" id="sbutton"><img id="search" src="./icons/search.png"></button>
-        </form>
         <a id="login" <?php 
                 if(isset($utente)){
                     echo "href='./profile.php'";
@@ -86,10 +82,3 @@
         </div>
     </div>
 </nav>
-
-<div id="barwrapper">
-    <form id="mobilebar" class="searchbar" action="search.php" method="get">
-        <input type="text" name="search" placeholder="Artista, Evento o Località">
-        <button type="submit" id="sbutton"><img id="search" src="./icons/search.png"></button>
-    </form>
-</div>

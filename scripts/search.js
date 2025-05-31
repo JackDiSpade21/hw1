@@ -3,6 +3,7 @@ form.addEventListener('submit', search);
 const loadMoreButton = document.querySelector('#load-more');
 loadMoreButton.addEventListener('click', loadMore);
 const eventBox = document.querySelector('#event-list');
+window.addEventListener('DOMContentLoaded', searchStart);
 
 let start_artisti = 0;
 let count_artisti = 5;
@@ -121,4 +122,18 @@ function onJSONResults(json, append) {
         loadMoreButton.classList.add('load-more');
     }
     createResults(json, append);
+}
+
+function searchStart() {
+    const params = new URLSearchParams(window.location.search);
+    if (params.has('search')) {
+        const value = params.get('search');
+        form.searchInput.value = value;
+        lastSearch = value;
+        start_artisti = 0;
+        count_artisti = 5;
+        start_eventi = 0;
+        count_eventi = 5;
+        fetchResults(false);
+    }
 }

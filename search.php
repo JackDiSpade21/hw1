@@ -18,7 +18,7 @@
 </head>
 <body>
 
-    <?php include './blocks/top.php'; ?>
+    <?php include './blocks/topnosearch.php'; ?>
     <?php include './blocks/mobiletop.php'; ?>
 
     <div id="search-box">

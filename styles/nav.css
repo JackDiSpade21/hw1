@@ -71,6 +71,7 @@ nav p{
     border: 1px solid rgb(246, 246, 246);
     border-radius: 4px;
     background-color: rgb(33, 99, 227);
+    margin: 0;
 }
 
 #mobilebar{
@@ -91,12 +92,20 @@ input::placeholder{
     color: black;
 }
 
+.searchbar input:focus{
+    outline: none;
+}
+
 #sbutton{
     height: 46px;
     width: 51px;
     display: flex;
     align-items: center;
     justify-content: center;
+    appearance: none;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
 }
 
 #sbutton:hover{
